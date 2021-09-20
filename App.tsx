@@ -1,10 +1,11 @@
 import React from 'react';
 import * as eva from '@eva-design/eva';
 import {ApplicationProvider} from '@ui-kitten/components';
-import NewForderForm from './src/screens/NewForderForm';
+import {View} from 'react-native';
+import NewFolderForm from './src/screens/NewFolderForm';
 
 export default () => (
   <ApplicationProvider {...eva} theme={eva.light}>
-    <NewForderForm />
+    <NewFolderForm />
   </ApplicationProvider>
 );
