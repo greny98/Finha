@@ -2,28 +2,73 @@ import {
   Button,
   Icon,
   Layout,
+  Tab,
+  TabBar,
   Text,
   TopNavigation,
   TopNavigationAction,
 } from '@ui-kitten/components';
 import React, {useState} from 'react';
-import {StyleSheet} from 'react-native';
-import TextInputGroup from '../components/common/TextInputGroup';
+import {Dimensions, StyleSheet} from 'react-native';
+import TextInputGroup from '../../components/common/TextInputGroup';
 
 const NewFolderForm = () => {
+  const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [folderName, setFolderName] = useState('');
   const [walletType, setWalletType] = useState('');
   const [moneyAmount, setMoneyAmount] = useState(0);
   const [notes, setNotes] = useState('');
 
-  const BackIcon = (props: any) => <Icon {...props} name="arrow-back" />;
+  const {width, height} = Dimensions.get('screen');
 
-  const BackAction = () => <TopNavigationAction icon={BackIcon} />;
+  const renderScene = ({route, jumpTo}: any) => {
+    switch (route.key) {
+    }
+  };
+
+  const BackIcon = (props: any) => (
+    <Icon {...props} name="arrow-back" fill="#FFF" />
+  );
+
+  const BackAction = () => (
+    <TopNavigationAction icon={BackIcon} onPress={() => console.log('pushs')} />
+  );
+
+  const SetTitle = (props: any, title: string) => (
+    <Text {...props} style={{color: 'white', fontSize: 20}}>
+      {title}
+    </Text>
+  );
 
   return (
     <Layout>
       <Layout>
-        {/* <TopNavigation accessoryLeft={BackAction} title="Eva Application" /> */}
+        <TopNavigation
+          accessoryLeft={BackAction}
+          title={(props: any) => SetTitle(props, 'Thêm giao dịch')}
+          style={{backgroundColor: '#00C6C6'}}
+        />
+        <TabBar
+          selectedIndex={selectedIndex}
+          onSelect={index => setSelectedIndex(index)}
+          indicatorStyle={{
+            backgroundColor: '#fff',
+            zIndex: 10,
+          }}
+          style={{backgroundColor: '#00C6C6'}}>
+          <Tab title={(props: any) => SetTitle(props, 'Chi')} />
+          <Tab title={(props: any) => SetTitle(props, 'Thu')} />
+        </TabBar>
+        <Layout
+          style={{
+            width: '100%',
+            height: 20,
+            backgroundColor: '#00C6C6',
+            top: -4,
+            zIndex: 2,
+            marginBottom: 24,
+          }}
+        />
       </Layout>
       <Layout style={styles.root}>
         <TextInputGroup
@@ -60,6 +105,7 @@ const NewFolderForm = () => {
 };
 
 const styles = StyleSheet.create({
+  headerStyle: {},
   root: {
     alignItems: 'center',
     width: '100%',

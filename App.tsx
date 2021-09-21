@@ -1,11 +1,13 @@
 import React from 'react';
 import * as eva from '@eva-design/eva';
-import {ApplicationProvider} from '@ui-kitten/components';
+import {ApplicationProvider, IconRegistry} from '@ui-kitten/components';
 import {View} from 'react-native';
-import NewFolderForm from './src/screens/NewFolderForm';
+import {EvaIconsPack} from '@ui-kitten/eva-icons';
+import ThirdIntroActivity from './src/screens/intro/ThirdIntroActivity';
 
 export default () => (
   <ApplicationProvider {...eva} theme={eva.light}>
-    <NewFolderForm />
+    <IconRegistry icons={EvaIconsPack} />
+    <ThirdIntroActivity />
   </ApplicationProvider>
 );

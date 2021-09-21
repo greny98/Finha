@@ -6,9 +6,9 @@ import {
   SafeAreaView,
   ScrollView,
 } from 'react-native';
-import CardInfo from '../components/home/CardInfo';
-import InfoGroup from '../components/home/InfoGroup';
-import LineChartGroup from '../components/LineChartGroup';
+import CardInfo from '../../components/home/CardInfo';
+import InfoGroup from '../../components/home/InfoGroup';
+import LineChartGroup from '../../components/LineChartGroup';
 
 interface Props {}
 
