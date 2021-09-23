@@ -1,6 +1,6 @@
 import {Button, Layout, Text} from '@ui-kitten/components';
 import React from 'react';
-import {Dimensions, Image, StyleSheet} from 'react-native';
+import {Dimensions, Image, StyleSheet, TouchableOpacity} from 'react-native';
 
 interface Props {}
 
@@ -26,12 +26,16 @@ const WarningSaveMoneyActivity = (props: Props) => {
           Số tiền tiết kiệm được tuần này là 600.000 VNĐ, thấp hơn chỉ tiêu 10%
         </Text>
         <Layout style={[styles.btnContainer, {width}]}>
-          <Button style={styles.btnStyle}>
-            <Text>Thiết lập lại mục tiêu</Text>
-          </Button>
-          <Button style={styles.btnStyle}>
-            <Text>Không, cảm ơn</Text>
-          </Button>
+          <TouchableOpacity>
+            <Layout style={styles.btnStyle}>
+              <Text style={styles.textButton}>Thiết lập lại mục tiêu</Text>
+            </Layout>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Layout style={styles.btnStyle}>
+              <Text style={styles.textButton}>Không, cảm ơn</Text>
+            </Layout>
+          </TouchableOpacity>
         </Layout>
       </Layout>
     </Layout>
@@ -62,11 +66,20 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginTop: 20,
+    marginTop: 30,
   },
   btnStyle: {
     borderWidth: 0,
     borderRadius: 60,
+    width: 120,
+    height: 50,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 6,
+  },
+  textButton: {
+    textAlign: 'center',
   },
 });
 

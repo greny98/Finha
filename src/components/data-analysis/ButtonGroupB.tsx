@@ -1,0 +1,36 @@
+import {Layout, Text} from '@ui-kitten/components';
+import React from 'react';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+
+interface Props {
+  active: boolean;
+  title: string;
+}
+
+const ButtonGroupB = (props: Props) => {
+  const {active = true, title} = props;
+  return (
+    <TouchableOpacity>
+      <Layout
+        style={[
+          styles.btnStyle,
+          {backgroundColor: active ? '#00C6BA' : '#EBEDFF'},
+        ]}>
+        <Text style={{fontSize: 16, color: active ? '#fff' : '#000'}}>
+          {title}
+        </Text>
+      </Layout>
+    </TouchableOpacity>
+  );
+};
+const styles = StyleSheet.create({
+  btnStyle: {
+    width: 60,
+    height: 30,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
+
+export default ButtonGroupB;
