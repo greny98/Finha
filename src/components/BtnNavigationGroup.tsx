@@ -1,34 +1,43 @@
-import React from 'react';
-import {Layout, Text} from '@ui-kitten/components';
-import {StyleSheet, Image, View} from 'react-native';
-import BtnNavigation from './common/BtnNavigation';
+import React from "react";
+import { Layout, Text } from "@ui-kitten/components";
+import { StyleSheet, Image, View } from "react-native";
+import BtnNavigation from "./common/BtnNavigation";
 
-interface Props {}
+interface Props {
+}
 
-const btnTabDict: any = {
-  'Tổng quan': {
-    iconActive: require('../../static/icon/overview-active.png'),
-    icon: require('../../static/icon/overview.png'),
+interface ButtonIcon {
+  iconActive: any;
+  icon: any;
+  name: string;
+}
+
+const btnTabDict: { [key: string]: ButtonIcon } = {
+  overview: {
+    iconActive: require("../../static/icon/overview-active.png"),
+    icon: require("../../static/icon/overview.png"),
+    name: "Tổng quan"
   },
-  'Phân tích': {
-    iconActive: require('../../static/icon/analysis-active.png'),
-    icon: require('../../static/icon/analysis.png'),
+  analysis: {
+    iconActive: require("../../static/icon/analysis-active.png"),
+    icon: require("../../static/icon/analysis.png"),
+    name: "Phân tích"
   },
-  'Thêm giao dịch': {
-    iconActive: require('../../static/icon/transaction-active.png'),
-    icon: require('../../static/icon/transaction.png'),
-  },
+  transaction: {
+    iconActive: require("../../static/icon/transaction-active.png"),
+    icon: require("../../static/icon/transaction.png"),
+    name: "Thêm giao dịch"
+  }
 };
 
 const BtnNavigationGroup = (props: Props) => {
   return (
     <Layout style={styles.flexBox}>
       {Object.keys(btnTabDict).map(option => {
-        console.log(option);
         return (
           <View key={option}>
             <BtnNavigation
-              text={option}
+              text={btnTabDict[option].name}
               iconActive={btnTabDict[option].iconActive}
               icon={btnTabDict[option].icon}
               active={true}
@@ -42,10 +51,10 @@ const BtnNavigationGroup = (props: Props) => {
 
 const styles = StyleSheet.create({
   flexBox: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center"
+  }
 
 });
 

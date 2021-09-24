@@ -9,7 +9,7 @@ const SuccessCreateActivity = (props: Props) => {
     <Layout>
       <Layout style={styles.boxContainer}>
         <Layout>
-          <Image source={require('../../static/images/document-success.png')} />
+          <Image source={require('../../../assets/images/document-success.png')} />
         </Layout>
         <Layout style={styles.textBtnContainer}>
           <Text style={styles.titleStyle}>Well Done!</Text>

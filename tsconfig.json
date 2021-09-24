@@ -61,8 +61,8 @@
     "paths": {
       "*": ["src/*"],
       "component/*": ["src/component/*"],
-      "screens": ["src/screens"],
-      "static": ["src/static"],
+      "screens": ["src/screens/*"],
+      "assets": ["assets/*"],
     }
   },
   "exclude": [
