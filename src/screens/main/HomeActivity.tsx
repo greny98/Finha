@@ -50,9 +50,7 @@ const cardDict: any = {
 const HomeActivity = (props: Props) => {
   return (
     <SafeAreaView>
-      <ScrollView
-        style={{ marginBottom: 40 }}
-        showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Layout style={styles.headerContainer}>
           <Image
             source={require("assets/images/header.png")}

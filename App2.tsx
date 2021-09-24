@@ -4,9 +4,10 @@ import { ApplicationProvider } from "@ui-kitten/components";
 
 import BtnNavigationGroup from "./src/components/BtnNavigationGroup";
 import HomeActivity from "screens/main/HomeActivity";
+import TabNav from "navigation/TabNav";
 
 export default () => (
   <ApplicationProvider {...eva} theme={eva.light}>
-    <HomeActivity />
+    <TabNav />
   </ApplicationProvider>
 );

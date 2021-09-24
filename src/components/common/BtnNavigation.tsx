@@ -1,15 +1,20 @@
 import React from "react";
-import { Button, Layout, Text } from "@ui-kitten/components";
-import { StyleSheet, Image, TouchableOpacity, TouchableHighlight } from "react-native";
+import { Layout, Text } from "@ui-kitten/components";
+import { StyleSheet, Image, TouchableHighlight, TouchableHighlightProps } from "react-native";
 
-interface Props {
+interface Props extends TouchableHighlightProps {
+  iconActive?: any;
+  icon?: any;
+  text: string;
+  active: boolean;
 }
 
-const BtnNavigation = (props: any) => {
-  const { iconActive, icon, text, active } = props;
+const BtnNavigation = (props: Props) => {
+  const { iconActive, icon, text, active, ...btnProps } = props;
   return (
-    <TouchableHighlight style={styles.btnContainer} underlayColor="#aeb5f5" onPress={() => console.log("Pressed!")}>
-      <Layout style={[styles.btnContainer, {backgroundColor: 'transparent'}]}>
+    <TouchableHighlight style={[styles.btnContainer, { backgroundColor: active ? "#EBEDFF" : "transparent" }]}
+                        underlayColor="#aeb5f5" {...btnProps}>
+      <Layout style={[styles.btnContainer, { backgroundColor: "transparent" }]}>
         <Image source={active ? iconActive : icon} />
         {active && <Text style={styles.textStyle}>{text}</Text>}
       </Layout>
@@ -20,21 +25,19 @@ const BtnNavigation = (props: any) => {
 const styles = StyleSheet.create({
   btnContainer: {
     width: 130,
-    height: 36,
-    borderRadius: 16,
+    height: 40,
+    borderRadius: 20,
     backgroundColor: "#EBEDFF",
-    paddingLeft: 8,
-    paddingRight: 8,
+    paddingHorizontal: 12,
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "space-around"
   },
   flexBox: {
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "red"
   },
   textStyle: {
     color: "#2A327D",

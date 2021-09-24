@@ -2,45 +2,67 @@ import React from "react";
 import { Layout, Text } from "@ui-kitten/components";
 import { StyleSheet, Image, View } from "react-native";
 import BtnNavigation from "./common/BtnNavigation";
+import { BottomTabBarProps } from "@react-navigation/bottom-tabs/src/types";
 
-interface Props {
-}
-
-interface ButtonIcon {
-  iconActive: any;
-  icon: any;
-  name: string;
-}
-
-const btnTabDict: { [key: string]: ButtonIcon } = {
-  overview: {
-    iconActive: require("../../static/icon/overview-active.png"),
-    icon: require("../../static/icon/overview.png"),
-    name: "Tổng quan"
+const btnIcons = [
+  {
+    iconActive: require("assets/icon/overview-active.png"),
+    icon: require("assets/icon/overview.png")
   },
-  analysis: {
-    iconActive: require("../../static/icon/analysis-active.png"),
-    icon: require("../../static/icon/analysis.png"),
-    name: "Phân tích"
+  {
+    iconActive: require("assets/icon/analysis-active.png"),
+    icon: require("assets/icon/analysis.png")
   },
-  transaction: {
-    iconActive: require("../../static/icon/transaction-active.png"),
-    icon: require("../../static/icon/transaction.png"),
-    name: "Thêm giao dịch"
+  {
+    iconActive: require("assets/icon/transaction-active.png"),
+    icon: require("assets/icon/transaction.png")
   }
-};
+];
 
-const BtnNavigationGroup = (props: Props) => {
+
+const BtnNavigationGroup = (props: BottomTabBarProps) => {
+  const { state, descriptors, navigation } = props;
+
   return (
     <Layout style={styles.flexBox}>
-      {Object.keys(btnTabDict).map(option => {
+      {state.routes.map((route, index) => {
+        const { options } = descriptors[route.key];
+        const label = options.tabBarLabel;
+        const isFocused = state.index === index;
+
+        const onPress = () => {
+          const event = navigation.emit({
+            type: "tabPress",
+            target: route.key,
+            canPreventDefault: true
+          });
+
+          if (!isFocused && !event.defaultPrevented) {
+            // The `merge: true` option makes sure that the params inside the tab screen are preserved
+            navigation.navigate({ name: route.name, merge: true } as any);
+          }
+        };
+
+        const onLongPress = () => {
+          navigation.emit({
+            type: "tabLongPress",
+            target: route.key
+          });
+        };
+
         return (
-          <View key={option}>
+          <View key={label as string}>
             <BtnNavigation
-              text={btnTabDict[option].name}
-              iconActive={btnTabDict[option].iconActive}
-              icon={btnTabDict[option].icon}
-              active={true}
+              accessibilityRole="button"
+              accessibilityState={isFocused ? { selected: true } : {}}
+              accessibilityLabel={options.tabBarAccessibilityLabel}
+              testID={options.tabBarTestID}
+              onPress={onPress}
+              onLongPress={onLongPress}
+              text={label as string}
+              iconActive={btnIcons[index].iconActive}
+              icon={btnIcons[index].icon}
+              active={isFocused}
             />
           </View>
         );
@@ -53,7 +75,10 @@ const styles = StyleSheet.create({
   flexBox: {
     display: "flex",
     flexDirection: "row",
-    alignItems: "center"
+    alignItems: "center",
+    justifyContent: "space-between",
+    width: "100%",
+    padding: 8
   }
 
 });
