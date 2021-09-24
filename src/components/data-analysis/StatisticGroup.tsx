@@ -2,9 +2,13 @@ import {Layout, Text} from '@ui-kitten/components';
 import React from 'react';
 import {StyleSheet} from 'react-native';
 
-interface Props {}
+interface Props {
+  text:string;
+  price:number;
+  color:string;
+}
 
-const StatisticGroup = (props: any) => {
+const StatisticGroup = (props: Props) => {
   const {color, text, price} = props;
   return (
     <Layout style={styles.root}>

@@ -8,7 +8,7 @@ const SaveMoneyLoading = (props: Props) => {
   return (
     <Layout>
       <Image
-        source={require('../../../static/images/save-money-loading.png')}
+        source={require('assets/images/save-money-loading.png')}
         style={{width: '100%', height: '100%'}}
       />
     </Layout>

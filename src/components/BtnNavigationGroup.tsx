@@ -1,10 +1,9 @@
-import React from "react";
-import { Layout, Text } from "@ui-kitten/components";
-import { StyleSheet, Image, View } from "react-native";
-import BtnNavigation from "./common/BtnNavigation";
+import React from 'react';
+import {Layout} from '@ui-kitten/components';
+import {StyleSheet, View} from 'react-native';
+import BtnNavigation from './common/BtnNavigation';
 
-interface Props {
-}
+interface Props {}
 
 interface ButtonIcon {
   iconActive: any;
@@ -12,22 +11,22 @@ interface ButtonIcon {
   name: string;
 }
 
-const btnTabDict: { [key: string]: ButtonIcon } = {
+const btnTabDict: {[key: string]: ButtonIcon} = {
   overview: {
-    iconActive: require("../../static/icon/overview-active.png"),
-    icon: require("../../static/icon/overview.png"),
-    name: "Tổng quan"
+    iconActive: require('../../static/icon/overview-active.png'),
+    icon: require('../../static/icon/overview.png'),
+    name: 'Tổng quan',
   },
   analysis: {
-    iconActive: require("../../static/icon/analysis-active.png"),
-    icon: require("../../static/icon/analysis.png"),
-    name: "Phân tích"
+    iconActive: require('assets/icon/analysis-active.png'),
+    icon: require('assets/icon/analysis.png'),
+    name: 'Phân tích',
   },
   transaction: {
-    iconActive: require("../../static/icon/transaction-active.png"),
-    icon: require("../../static/icon/transaction.png"),
-    name: "Thêm giao dịch"
-  }
+    iconActive: require('assets/icon/transaction-active.png'),
+    icon: require('assets/icon/transaction.png'),
+    name: 'Thêm giao dịch',
+  },
 };
 
 const BtnNavigationGroup = (props: Props) => {
@@ -51,11 +50,10 @@ const BtnNavigationGroup = (props: Props) => {
 
 const styles = StyleSheet.create({
   flexBox: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center"
-  }
-
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 });
 
 export default BtnNavigationGroup;

@@ -19,7 +19,7 @@ const WarningSaveMoneyActivity = (props: Props) => {
           Hãy kiểm soát khoản chi tiêu mua sắm nhé!
         </Text>
         <Image
-          source={require('../../../static/images/monkey.png')}
+          source={require('assets/images/monkey.png')}
           style={{marginVertical: 40}}
         />
         <Text style={[styles.textStyle, {textAlign: 'center'}]}>

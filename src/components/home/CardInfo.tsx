@@ -1,6 +1,6 @@
 import React from 'react';
 import {Layout, Text, Button} from '@ui-kitten/components';
-import {StyleSheet, Image, View} from 'react-native';
+import {StyleSheet} from 'react-native';
 
 interface Props {}
 
@@ -9,7 +9,7 @@ const CardInfo = (props: any) => {
 
   const downRate = (downPrice / (downPrice + upPrice)) * 100;
   const downRateString = downRate.toString() + '%';
-  const upRate = (upPrice / (downPrice + upPrice))* 100;
+  const upRate = (upPrice / (downPrice + upPrice)) * 100;
   const upRateString = upRate.toString() + '%';
 
   return (

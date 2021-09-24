@@ -7,15 +7,11 @@ import {
 } from '@ui-kitten/components';
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
-import CustomModal from '../../components/common/CustomModal';
+import CustomModal from 'components/common/CustomModal';
 
 interface Props {}
 
 const FirstIntroActivity = (props: Props) => {
-  const BackIcon = (props: any) => <Icon {...props} name="arrow-back" />;
-
-  const renderBackAction = () => <TopNavigationAction icon={BackIcon} />;
-
   const renderRightActions = () => (
     <TouchableOpacity>
       <Text style={styles.textNavStyle}>Skip</Text>
@@ -25,7 +21,7 @@ const FirstIntroActivity = (props: Props) => {
   return (
     <Layout>
       <Image
-        source={require('../../../static/images/intro-1.png')}
+        source={require('assets/images/intro-1.png')}
         style={styles.imageStyle}
       />
       <Layout style={styles.navContainer}>

@@ -1,38 +1,45 @@
 import React from 'react';
-import {Layout, Text} from '@ui-kitten/components';
-import {StyleSheet, Image, View} from 'react-native';
-import VerticalLineChart from './common/VerticalLineChart';
+import {Layout} from '@ui-kitten/components';
+import {StyleSheet, View} from 'react-native';
+import VerticalLineChart from '../common/VerticalLineChart';
 
 interface Props {}
 
 const chartStatics: any = {
-  CN: {
+  Sunday: {
     redRate: 20,
     greenRate: 80,
+    name: 'CN',
   },
-  'Thứ 2': {
+  Money: {
     redRate: 20,
     greenRate: 80,
+    name: 'Thứ 2',
   },
-  'Thứ 3': {
+  Tuesday: {
     redRate: 30,
     greenRate: 70,
+    name: 'Thứ 3',
   },
-  'Thứ 4': {
+  Wednesday: {
     redRate: 60,
     greenRate: 40,
+    name: 'Thứ 4',
   },
-  'Thứ 5': {
+  Thursday: {
     redRate: 50,
     greenRate: 50,
+    name: 'Thứ 5',
   },
-  'Thứ 6': {
+  Friday: {
     redRate: 40,
     greenRate: 60,
+    name: 'Thứ 6',
   },
-  'Thứ 7': {
+  Saturday: {
     redRate: 20,
     greenRate: 80,
+    name: 'Thứ 7',
   },
 };
 
@@ -44,7 +51,7 @@ const LineChartGroup = (props: Props) => {
           return (
             <View key={option}>
               <VerticalLineChart
-                day={option}
+                day={chartStatics[option].name}
                 redRate={chartStatics[option].redRate}
                 greenRate={chartStatics[option].greenRate}
               />

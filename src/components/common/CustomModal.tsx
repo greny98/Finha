@@ -26,10 +26,12 @@ const CustomModal = (props: Props) => {
         </Layout>
         {imageOrButton ? (
           <TouchableOpacity>
-            <Image source={require('../../../static/icon/btn-next.png')} />
+            <Image source={require('assets/icon/btn-next.png')} />
           </TouchableOpacity>
         ) : (
-          <Button style={styles.btnStyle}>WELCOME TO FIHA</Button>
+          <TouchableOpacity style={styles.btnStyle}>
+            <Text style={{color: '#fff'}}>WELCOME TO FIHA</Text>
+          </TouchableOpacity>
         )}
       </Layout>
     </Layout>
@@ -58,7 +60,7 @@ const styles = StyleSheet.create({
   subTitle: {
     fontSize: 18,
     textAlign: 'center',
-    color:'#888A8C'
+    color: '#888A8C',
   },
   btnContainer: {
     position: 'absolute',
@@ -72,6 +74,7 @@ const styles = StyleSheet.create({
   btnStyle: {
     backgroundColor: '#0AA3F0',
     borderRadius: 10,
+    padding: 16,
   },
   lineStep: {
     width: 22,

@@ -3,9 +3,13 @@ import { Button, Layout, Text } from "@ui-kitten/components";
 import { StyleSheet, Image, TouchableOpacity, TouchableHighlight } from "react-native";
 
 interface Props {
+  text:string;
+  active:boolean;
+  iconActive:any;
+  icon:any
 }
 
-const BtnNavigation = (props: any) => {
+const BtnNavigation = (props: Props) => {
   const { iconActive, icon, text, active } = props;
   return (
     <TouchableHighlight style={styles.btnContainer} underlayColor="#aeb5f5" onPress={() => console.log("Pressed!")}>
