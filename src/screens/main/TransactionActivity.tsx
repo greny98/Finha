@@ -9,7 +9,7 @@ const TransactionActivity = (props: Props) => {
     <Layout>
       <Layout style={styles.boxContainer}>
         <Layout>
-          <Image source={require('../../static/images/document.png')} />
+          <Image source={require('static/images/document.png')} />
         </Layout>
         <Layout style={styles.textBtnContainer}>
           <Text style={styles.titleStyle}>Bắt đầu</Text>

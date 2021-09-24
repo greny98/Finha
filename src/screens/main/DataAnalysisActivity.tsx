@@ -7,9 +7,9 @@ import {
   ScrollView,
   Dimensions,
 } from 'react-native';
-import ButtonGroupA from '../../components/data-analysis/ButtonGroupA';
-import ButtonGroupB from '../../components/data-analysis/ButtonGroupB';
-import StatisticGroup from '../../components/data-analysis/StatisticGroup';
+import ButtonGroupA from 'components/data-analysis/ButtonGroupA';
+import ButtonGroupB from 'components/data-analysis/ButtonGroupB';
+import StatisticGroup from 'components/data-analysis/StatisticGroup';
 import {VictoryPie} from 'victory-native';
 
 interface Props {}
