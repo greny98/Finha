@@ -1,50 +1,44 @@
-import React from "react";
-import { Layout, Text } from "@ui-kitten/components";
-import {
-  StyleSheet,
-  Image,
-  SafeAreaView,
-  ScrollView
-} from "react-native";
-import CardInfo from "components/home/CardInfo";
-import InfoGroup from "components/home/InfoGroup";
-import LineChartGroup from "components/LineChartGroup";
+import React from 'react';
+import {Layout, Text} from '@ui-kitten/components';
+import {StyleSheet, Image, SafeAreaView, ScrollView} from 'react-native';
+import CardInfo from 'components/home/CardInfo';
+import InfoGroup from 'components/home/InfoGroup';
+import LineChartGroup from 'components/home/LineChartGroup';
 
-interface Props {
-}
+interface Props {}
 
 const infoDict: any = {
   MS: {
-    name: "Đi chợ/Siêu thị",
+    name: 'Đi chợ/Siêu thị',
     price: 300000,
     date: new Date().toDateString(),
-    isIncrease: false
+    isIncrease: false,
   },
   AB: {
-    name: "Vay mượn",
+    name: 'Vay mượn',
     price: 300000,
     date: new Date().toDateString(),
-    isIncrease: true
+    isIncrease: true,
   },
   BM: {
-    name: "Tiền lì xì",
+    name: 'Tiền lì xì',
     price: 300000,
     date: new Date().toDateString(),
-    isIncrease: true
-  }
+    isIncrease: true,
+  },
 };
 
 const cardDict: any = {
-  "Hôm nay": {
+  'Hôm nay': {
     downPrice: 3000,
     upPrice: 5000,
-    savePrice: 2000
+    savePrice: 2000,
   },
-  "Hôm qua": {
+  'Hôm qua': {
     downPrice: 3000,
     upPrice: 5000,
-    savePrice: 2000
-  }
+    savePrice: 2000,
+  },
 };
 
 const HomeActivity = (props: Props) => {
@@ -53,9 +47,10 @@ const HomeActivity = (props: Props) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <Layout style={styles.headerContainer}>
           <Image
-            source={require("assets/images/header.png")}
+            source={require('assets/images/header.png')}
             resizeMode="cover"
-            style={styles.imageBG} />
+            style={styles.imageBG}
+          />
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
@@ -109,33 +104,33 @@ const HomeActivity = (props: Props) => {
 
 const styles = StyleSheet.create({
   imageBG: {
-    width: "100%"
+    width: '100%',
   },
   headerContainer: {
-    position: "relative"
+    position: 'relative',
   },
   cardInfoContainer: {
-    position: "absolute",
+    position: 'absolute',
     bottom: 30,
     left: 12,
-    width: "100%",
+    width: '100%',
     height: 180,
     borderRadius: 20,
-    display: "flex",
-    flexDirection: "row",
-    backgroundColor: "transparent"
+    display: 'flex',
+    flexDirection: 'row',
+    backgroundColor: 'transparent',
   },
   groupContainer: {
     marginTop: 12,
-    marginLeft: 24
+    marginLeft: 24,
   },
   titleStyle: {
     fontSize: 20,
-    fontWeight: "500"
+    fontWeight: '500',
   },
   infoGroupContainer: {
-    paddingTop: 16
-  }
+    paddingTop: 16,
+  },
 });
 
 export default HomeActivity;

@@ -14,22 +14,32 @@ import {VictoryPie} from 'victory-native';
 
 interface Props {}
 
-const infoDict: any = {
-  'Đi chợ': {
+interface IInfoDict {
+  color: string;
+  price: number;
+  name: string;
+}
+
+const infoDict: {[key: string]: IInfoDict} = {
+  market: {
     color: '#00C689',
     price: 40000,
+    name: 'Đi chợ',
   },
-  'Sinh hoạt': {
+  living: {
     color: '#FE645A',
     price: 60000,
+    name: 'Sinh hoạt',
   },
-  'Thuê nhà': {
+  rent: {
     color: '#2A327D',
     price: 20000,
+    name: 'Thuê nhà',
   },
-  'Trả góp': {
+  payoff: {
     color: '#FFB039',
     price: 30000,
+    name: 'Trả góp',
   },
 };
 
@@ -113,7 +123,7 @@ const DataAnalysisActivity = (props: Props) => {
             <Layout style={{marginBottom: 8}} key={item}>
               <StatisticGroup
                 color={infoDict[item].color}
-                text={item}
+                text={infoDict[item].name}
                 price={infoDict[item].price}
               />
             </Layout>
@@ -130,7 +140,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
-    backgroundColor:'#fff'
+    backgroundColor: '#fff',
   },
   infoContainer: {
     padding: 24,
@@ -138,7 +148,7 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor:'#fff'
+    backgroundColor: '#fff',
   },
   textCirlce1: {
     fontSize: 20,

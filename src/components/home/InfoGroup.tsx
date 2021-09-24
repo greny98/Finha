@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Input,
-  Layout,
-  Text,
-  InputProps,
-  LayoutProps,
-  TextProps,
-} from '@ui-kitten/components';
+import {Layout, Text} from '@ui-kitten/components';
 import {StyleSheet} from 'react-native';
 
 interface Props {

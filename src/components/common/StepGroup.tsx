@@ -7,7 +7,7 @@ interface Props {
 }
 
 const StepGroup = (props: Props) => {
-  const { stepActive} = props
+  const { stepActive } = props
   return (
     <Layout style={styles.root}>
       <Layout style={[styles.lineStep, { backgroundColor: stepActive == 1 ? '#0AA3F0':'#CBD6F3'}]} />

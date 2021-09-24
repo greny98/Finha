@@ -1,4 +1,5 @@
-import {Button, Icon, Layout, Text} from '@ui-kitten/components';
+import {Layout, Text} from '@ui-kitten/components';
+import CustomButton from 'components/common/CustomButton';
 import React from 'react';
 import {Image, StyleSheet} from 'react-native';
 
@@ -9,16 +10,14 @@ const SuccessCreateActivity = (props: Props) => {
     <Layout>
       <Layout style={styles.boxContainer}>
         <Layout>
-          <Image source={require('../../../assets/images/document-success.png')} />
+          <Image source={require('assets/images/document-success.png')} />
         </Layout>
         <Layout style={styles.textBtnContainer}>
           <Text style={styles.titleStyle}>Well Done!</Text>
           <Text style={styles.subTitleStyle}>
             Your folder is ready to start reporting
           </Text>
-          <Button style={styles.btnStyle}>
-            <Text>View Folder</Text>
-          </Button>
+          <CustomButton title="View Folder" onPress={() => {}} />
         </Layout>
       </Layout>
     </Layout>
@@ -45,14 +44,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 10,
     color: '#C0C2D1',
-  },
-  btnStyle: {
-    backgroundColor: '#00C6C6',
-    borderWidth: 0,
-    width: 150,
-    height: 40,
-    borderRadius: 60,
-    marginTop: 40,
   },
 });
 

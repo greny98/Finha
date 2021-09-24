@@ -8,9 +8,10 @@ import {
   TopNavigation,
   TopNavigationAction,
 } from '@ui-kitten/components';
+import CustomButton from 'components/common/CustomButton';
 import React, {useState} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
-import TextInputGroup from '../../components/common/TextInputGroup';
+import TextInputGroup from 'components/common/TextInputGroup';
 
 const NewFolderForm = () => {
   const [selectedIndex, setSelectedIndex] = React.useState(0);
@@ -96,9 +97,7 @@ const NewFolderForm = () => {
           onChangeText={text => setNotes(text)}
           label="Ghi chú"
         />
-        <Button style={styles.button} appearance="filled" size="medium">
-          <Text style={styles.buttonText}>Lưu</Text>
-        </Button>
+        <CustomButton title="Lưu" onPress={() => {}} />
       </Layout>
     </Layout>
   );
@@ -116,15 +115,6 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderRadius: 50,
-  },
-  button: {
-    width: 150,
-    backgroundColor: '#00C6C6',
-    borderColor: '#00C6C6',
-    borderRadius: 100,
-  },
-  buttonText: {
-    fontSize: 16,
   },
 });
 

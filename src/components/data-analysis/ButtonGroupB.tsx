@@ -3,7 +3,7 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 
 interface Props {
-  active: boolean;
+  active?: boolean;
   title: string;
 }
 

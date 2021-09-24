@@ -9,7 +9,7 @@ const SuccessSaveMoney = (props: Props) => {
     <Layout style={styles.root}>
       <Layout style={styles.formContainer}>
         <Image
-          source={require('../../../static/images/check-circle-2.png')}
+          source={require('assets/images/check-circle-2.png')}
         />
         <Layout style={{marginTop: 40}}>
           <Text style={styles.textStyle}>

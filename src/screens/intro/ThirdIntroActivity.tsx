@@ -7,7 +7,7 @@ import {
 } from '@ui-kitten/components';
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
-import CustomModal from '../../components/common/CustomModal';
+import CustomModal from 'components/common/CustomModal';
 
 interface Props {}
 
@@ -25,7 +25,7 @@ const ThirdIntroActivity = (props: Props) => {
   return (
     <Layout>
       <Image
-        source={require('../../../static/images/intro-3.png')}
+        source={require('assets/images/intro-3.png')}
         style={styles.imageStyle}
       />
       <Layout style={styles.navContainer}>

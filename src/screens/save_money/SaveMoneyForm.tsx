@@ -1,7 +1,7 @@
 import {Button, Input, Layout, Text} from '@ui-kitten/components';
 import React, {useState} from 'react';
 import {Image, StyleSheet} from 'react-native';
-import TextInputGroup from '../../components/common/TextInputGroup';
+import TextInputGroup from 'components/common/TextInputGroup';
 
 interface Props {}
 
@@ -39,11 +39,11 @@ const SaveMoneyForm = (props: Props) => {
         </Layout>
 
         <Image
-          source={require('../../../static/icon/face-icon.png')}
+          source={require('assets/icon/face-icon.png')}
           style={styles.faceStyle}
         />
         <Image
-          source={require('../../../static/icon/star-icon.png')}
+          source={require('assets/icon/star-icon.png')}
           style={styles.starStyle}
         />
       </Layout>
