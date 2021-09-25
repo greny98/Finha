@@ -14,6 +14,9 @@ export const models: { [key: string]: Column[] } = {
     { name: "id", primaryKey: true, dataType: "INTEGER", notNull: true },
     { name: "categoryId", dataType: "INTEGER", notNull: true },
     { name: "factor", dataType: "INTEGER", notNull: true },
-    { name: "date", dataType: "TEXT", notNull: true }
+    { name: "date", dataType: "TEXT", notNull: true },
+    { name: "walletId", dataType: "INTEGER", notNull: true },
+    { name: "amount", dataType: "REAL", notNull: true },
+    { name: "note", dataType: "TEXT", defaultValue: "''" }
   ]
 };

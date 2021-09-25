@@ -1,4 +1,5 @@
 import { enablePromise, openDatabase, SQLiteDatabase } from "react-native-sqlite-storage";
+import moment from "moment";
 
 enablePromise(true);
 
@@ -42,6 +43,11 @@ export const createTable = async (db: SQLiteDatabase, tableName: string, columns
   await db.executeSql(query);
 };
 
+export const deleteTable = async (db: SQLiteDatabase, tableName: string) => {
+  const query = `drop table ${tableName}`;
+  await db.executeSql(query);
+};
+
 export const createWallets = async (db: SQLiteDatabase) => {
   const wallets = ["Digital Wallet", "Cash", "Internet Banking"];
   await Promise.all(wallets.map(wallet => {
@@ -63,3 +69,40 @@ export const getWallets = async (db: SQLiteDatabase) => {
   });
   return wallets;
 };
+
+export interface Transaction {
+  id?: number;
+  categoryId: number;
+  walletId: number;
+  factor: number; // thu: +1, chi: -1
+  date: Date | string;
+  amount: number;
+  note: string;
+}
+
+export const createTransactions = (db: SQLiteDatabase, transaction: Transaction) => {
+  const { categoryId, walletId, factor, date, amount, note } = transaction;
+  const query = `
+      INSERT INTO transactions (categoryId, walletId, factor, date, amount, note) 
+      VALUES(${categoryId}, ${walletId}, ${factor}, '${moment(date).format("YYYY-MM-DD HH:mm:SS.SSS")}', ${amount}, '${note}');`;
+  return db.executeSql(query);
+};
+
+export const getTransactions = async (db: SQLiteDatabase, start: Date, end: Date) => {
+  const startStr = moment(start).format("YYYY-MM-DD HH:mm:SS.SSS");
+  const endStr = moment(end).format("YYYY-MM-DD HH:mm:SS.SSS");
+
+  const query = `
+    SELECT * FROM transactions WHERE date BETWEEN '${startStr}' AND '${endStr}'
+  `;
+  const transactions: Transaction[] = [];
+  const results = await db.executeSql(query);
+  results.forEach(result => {
+    for (let index = 0; index < result.rows.length; index++) {
+      transactions.push(result.rows.item(index));
+    }
+  });
+  return transactions;
+};
+
+
