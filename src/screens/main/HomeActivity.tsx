@@ -11,19 +11,16 @@ const infoDict: any = {
   MS: {
     name: 'Đi chợ/Siêu thị',
     price: 300000,
-    date: new Date().toDateString(),
     isIncrease: false,
   },
   AB: {
     name: 'Vay mượn',
     price: 300000,
-    date: new Date().toDateString(),
     isIncrease: true,
   },
   BM: {
     name: 'Tiền lì xì',
     price: 300000,
-    date: new Date().toDateString(),
     isIncrease: true,
   },
 };
@@ -46,15 +43,8 @@ const HomeActivity = (props: Props) => {
     <SafeAreaView>
       <ScrollView showsVerticalScrollIndicator={false}>
         <Layout style={styles.headerContainer}>
-          <Image
-            source={require('assets/images/header.png')}
-            resizeMode="cover"
-            style={styles.imageBG}
-          />
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            style={styles.cardInfoContainer}>
+          <Image source={require('assets/images/header.png')} resizeMode="cover" style={styles.imageBG} />
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.cardInfoContainer}>
             {Object.keys(cardDict).map(item => {
               return (
                 <React.Fragment key={item}>
@@ -81,7 +71,6 @@ const HomeActivity = (props: Props) => {
                     shortcutName={item}
                     name={infoDict[item].name}
                     price={infoDict[item].price}
-                    date={infoDict[item].date}
                     isIncrease={infoDict[item].isIncrease}
                   />
                 </React.Fragment>

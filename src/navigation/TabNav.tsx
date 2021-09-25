@@ -12,15 +12,6 @@ import { models } from "db/models";
 
 const Tab = createBottomTabNavigator();
 
-const MyTheme = {
-  ...DefaultTheme,
-  colors: {
-    ...DefaultTheme.colors,
-    background: "#fff",
-    primary: "rgb(255, 45, 85)"
-  }
-};
-
 const TabNav: React.FC = () => {
   useEffect(() => {
     const loadDb = async () => {
@@ -36,17 +27,20 @@ const TabNav: React.FC = () => {
   }, []);
 
   return (
-    <NavigationContainer theme={MyTheme}>
-      <Tab.Navigator tabBar={props => <BtnNavigationGroup {...props} />}>
-        <Tab.Screen name="Home" component={HomeActivity} options={{ headerShown: false, tabBarLabel: "Tổng quan" }} />
-        <Tab.Screen name="Data Analysis" component={DataAnalysisActivity}
-                    options={{ headerShown: false, tabBarLabel: "Phân tích" }} />
-        <Tab.Screen name="Transaction" component={TransactionActivity}
-                    options={{ headerShown: false, tabBarLabel: "Thêm giao dịch" }} />
-      </Tab.Navigator>
-    </NavigationContainer>
+    <Tab.Navigator tabBar={props => <BtnNavigationGroup {...props} />}>
+      <Tab.Screen name="Home" component={HomeActivity} options={{headerShown: false, tabBarLabel: 'Tổng quan'}} />
+      <Tab.Screen
+        name="DataAnalysis"
+        component={DataAnalysisActivity}
+        options={{headerShown: false, tabBarLabel: 'Phân tích'}}
+      />
+      <Tab.Screen
+        name="Transaction"
+        component={TransactionActivity}
+        options={{headerShown: false, tabBarLabel: 'Thêm giao dịch'}}
+      />
+    </Tab.Navigator>
   );
 };
 
 export default TabNav;
-
