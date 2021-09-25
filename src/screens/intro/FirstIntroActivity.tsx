@@ -1,40 +1,40 @@
-import {
-  Icon,
-  Layout,
-  Text,
-  TopNavigation,
-  TopNavigationAction,
-} from '@ui-kitten/components';
+import {Icon, Layout, Text, TopNavigation, TopNavigationAction} from '@ui-kitten/components';
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import CustomModal from 'components/common/CustomModal';
+import {useNavigation, NavigationProp, ParamListBase} from '@react-navigation/native';
 
 interface Props {}
 
 const FirstIntroActivity = (props: Props) => {
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
+  const navigateHome = () => {
+    navigation.navigate('Tab',{screen:'DataAnalysis'});
+  };
+
+  const nextIntro = () =>{
+    navigation.navigate('IntroTwo')
+  }
+
   const renderRightActions = () => (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={navigateHome}>
       <Text style={styles.textNavStyle}>Skip</Text>
     </TouchableOpacity>
   );
 
   return (
     <Layout>
-      <Image
-        source={require('assets/images/intro-1.png')}
-        style={styles.imageStyle}
-      />
+      <Image source={require('assets/images/intro-1.png')} style={styles.imageStyle} />
       <Layout style={styles.navContainer}>
-        <TopNavigation
-          accessoryRight={renderRightActions}
-          style={{backgroundColor: '#AADAF1'}}
-        />
+        <TopNavigation accessoryRight={renderRightActions} style={{backgroundColor: '#AADAF1'}} />
       </Layout>
       <Layout style={styles.modalContainer}>
         <CustomModal
           title="CHÀO MỪNG BẠN ĐẾN VỚI FIHA"
           content="Ứng dụng giúp bạn quản lý tài chính phù hợp với mục tiêu tiết kiệm của bạn"
           stepActive={1}
+          onPress={nextIntro}
         />
       </Layout>
     </Layout>

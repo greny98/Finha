@@ -6,22 +6,16 @@ interface Props {
   shortcutName: string;
   name: string;
   price: number;
-  date: any;
   isIncrease: boolean;
 }
 
 const InfoGroup = (props: Props) => {
-  const {shortcutName, name, price, date, isIncrease} = props;
+  const {shortcutName, name, price, isIncrease} = props;
   return (
-    <Layout>
+    <Layout style={{marginBottom: 8}}>
       <Layout style={styles.flexBox}>
         <Layout
-          style={[
-            styles.shortCutImage,
-            isIncrease
-              ? {backgroundColor: '#00C6BA'}
-              : {backgroundColor: '#FE645A'},
-          ]}>
+          style={[styles.shortCutImage, isIncrease ? {backgroundColor: '#00C6BA'} : {backgroundColor: '#FE645A'}]}>
           <Text style={styles.textInCircle}>{shortcutName}</Text>
         </Layout>
         <Layout style={styles.infoContainer}>
@@ -32,15 +26,8 @@ const InfoGroup = (props: Props) => {
             ) : (
               <Text style={{color: isIncrease ? '#00C6BA' : '#FE645A'}}>-</Text>
             )}
-            <Text
-              style={[
-                styles.priceStyle,
-                {color: isIncrease ? '#00C6BA' : '#FE645A'},
-              ]}>
-              {price}
-            </Text>
+            <Text style={[styles.priceStyle, {color: isIncrease ? '#00C6BA' : '#FE645A'}]}>{price}</Text>
           </Layout>
-          <Text style={styles.dateStyle}>{date}</Text>
         </Layout>
       </Layout>
     </Layout>

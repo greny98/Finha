@@ -1,33 +1,30 @@
-import {
-  Icon,
-  Layout,
-  Text,
-  TopNavigation,
-  TopNavigationAction,
-} from '@ui-kitten/components';
+import {Icon, Layout, Text, TopNavigation, TopNavigationAction} from '@ui-kitten/components';
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import CustomModal from 'components/common/CustomModal';
+import {useNavigation, NavigationProp, ParamListBase} from '@react-navigation/native';
 
 interface Props {}
 
 const ThirdIntroActivity = (props: Props) => {
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
+  const navigateHomePage = () => {
+    navigation.navigate('Tab', {screen: 'Home'});
+  };
   const BackIcon = (props: any) => <Icon {...props} name="arrow-back" />;
 
-  const renderBackAction = () => <TopNavigationAction icon={BackIcon} />;
+  const renderBackAction = () => <TopNavigationAction icon={BackIcon} onPress={() => navigation.goBack()} />;
 
   const renderRightActions = () => (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={navigateHomePage}>
       <Text style={styles.textNavStyle}>Skip</Text>
     </TouchableOpacity>
   );
 
   return (
     <Layout>
-      <Image
-        source={require('assets/images/intro-3.png')}
-        style={styles.imageStyle}
-      />
+      <Image source={require('assets/images/intro-3.png')} style={styles.imageStyle} />
       <Layout style={styles.navContainer}>
         <TopNavigation
           accessoryLeft={renderBackAction}
@@ -41,6 +38,7 @@ const ThirdIntroActivity = (props: Props) => {
           content="Cảnh báo các khoản tiền vượt mức chi tiêu, giúp bạn điều chỉnh kế hoạch"
           stepActive={3}
           imageOrButton={false}
+          onPress={navigateHomePage}
         />
       </Layout>
     </Layout>

@@ -8,10 +8,11 @@ interface Props {
   content: string;
   stepActive: number;
   imageOrButton?: boolean;
+  onPress: () => void;
 }
 
 const CustomModal = (props: Props) => {
-  const {title, content, stepActive, imageOrButton = true} = props;
+  const {title, content, stepActive, imageOrButton = true, onPress} = props;
   return (
     <Layout style={styles.root}>
       <Layout style={styles.flexBox}>
@@ -25,11 +26,11 @@ const CustomModal = (props: Props) => {
           <StepGroup stepActive={stepActive} />
         </Layout>
         {imageOrButton ? (
-          <TouchableOpacity>
+          <TouchableOpacity onPress={onPress}>
             <Image source={require('assets/icon/btn-next.png')} />
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.btnStyle}>
+          <TouchableOpacity style={styles.btnStyle} onPress={onPress}>
             <Text style={{color: '#fff'}}>WELCOME TO FIHA</Text>
           </TouchableOpacity>
         )}

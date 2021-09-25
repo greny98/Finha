@@ -1,33 +1,35 @@
-import {
-  Icon,
-  Layout,
-  Text,
-  TopNavigation,
-  TopNavigationAction,
-} from '@ui-kitten/components';
+import {Icon, Layout, Text, TopNavigation, TopNavigationAction} from '@ui-kitten/components';
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import CustomModal from 'components/common/CustomModal';
+import {useNavigation, NavigationProp, ParamListBase} from '@react-navigation/native';
 
 interface Props {}
 
 const SecondIntroActivity = (props: Props) => {
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
   const BackIcon = (props: any) => <Icon {...props} name="arrow-back" />;
 
-  const renderBackAction = () => <TopNavigationAction icon={BackIcon} />;
+  const renderBackAction = () => <TopNavigationAction icon={BackIcon} onPress={()=> navigation.goBack()} />;
+
+  const navigateHomePage = () => {
+    navigation.navigate('Tab', {screen: 'Home'});
+  };
 
   const renderRightActions = () => (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={navigateHomePage}>
       <Text style={styles.textNavStyle}>Skip</Text>
     </TouchableOpacity>
   );
 
+  const nextIntro = () => {
+    navigation.navigate('IntroThree');
+  };
+
   return (
     <Layout>
-      <Image
-        source={require('assets/images/intro-2.png')}
-        style={styles.imageStyle}
-      />
+      <Image source={require('assets/images/intro-2.png')} style={styles.imageStyle} />
       <Layout style={styles.navContainer}>
         <TopNavigation
           accessoryLeft={renderBackAction}
@@ -40,6 +42,7 @@ const SecondIntroActivity = (props: Props) => {
           title="QUẢN LÝ TÀI CHÍNH THÔNG MINH"
           content="Đưa ra kế hoạch chi tiêu tối ưu nhất thông qua việc cập nhật tình hình tài chính thường xuyên"
           stepActive={2}
+          onPress={nextIntro}
         />
       </Layout>
     </Layout>
