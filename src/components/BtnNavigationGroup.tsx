@@ -1,6 +1,6 @@
 import React from "react";
-import { Layout, Text } from "@ui-kitten/components";
-import { StyleSheet, Image, View } from "react-native";
+import { Layout } from "@ui-kitten/components";
+import { StyleSheet, View } from "react-native";
 import BtnNavigation from "./common/BtnNavigation";
 import { BottomTabBarProps } from "@react-navigation/bottom-tabs/src/types";
 

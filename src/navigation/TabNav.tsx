@@ -5,6 +5,9 @@ import HomeActivity from "screens/main/HomeActivity";
 import DataAnalysisActivity from "screens/main/DataAnalysisActivity";
 import BtnNavigationGroup from "components/BtnNavigationGroup";
 import TransactionActivity from "screens/main/TransactionActivity";
+import { useEffect } from "react";
+import { createTable, createWallets, getDBConnection, getWallets } from "db/db-service";
+import { models } from "db/models";
 
 
 const Tab = createBottomTabNavigator();
@@ -19,6 +22,19 @@ const MyTheme = {
 };
 
 const TabNav: React.FC = () => {
+  useEffect(() => {
+    const loadDb = async () => {
+      const db = await getDBConnection();
+      const createTables = Object.keys(models).map(tableName => createTable(db, tableName, models[tableName]));
+      await Promise.all(createTables);
+      const wallets = await getWallets(db);
+      if (wallets.length === 0) {
+        await createWallets(db);
+      }
+    };
+    loadDb();
+  }, []);
+
   return (
     <NavigationContainer theme={MyTheme}>
       <Tab.Navigator tabBar={props => <BtnNavigationGroup {...props} />}>
