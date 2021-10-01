@@ -1,6 +1,6 @@
-import React from "react";
-import { Layout, Text } from "@ui-kitten/components";
-import { StyleSheet, Image, TouchableHighlight, TouchableHighlightProps } from "react-native";
+import React from 'react';
+import {Layout, Text} from '@ui-kitten/components';
+import {StyleSheet, Image, TouchableHighlight, TouchableHighlightProps} from 'react-native';
 
 interface Props extends TouchableHighlightProps {
   iconActive?: any;
@@ -10,11 +10,13 @@ interface Props extends TouchableHighlightProps {
 }
 
 const BtnNavigation = (props: Props) => {
-  const { iconActive, icon, text, active, ...btnProps } = props;
+  const {iconActive, icon, text, active, ...btnProps} = props;
   return (
-    <TouchableHighlight style={[styles.btnContainer, { backgroundColor: active ? "#EBEDFF" : "transparent" }]}
-                        underlayColor="#aeb5f5" {...btnProps}>
-      <Layout style={[styles.btnContainer, { backgroundColor: "transparent" }]}>
+    <TouchableHighlight
+      style={[styles.btnContainer, {backgroundColor: active ? '#EBEDFF' : 'transparent'}]}
+      underlayColor="#aeb5f5"
+      {...btnProps}>
+      <Layout style={[styles.btnContainer, {backgroundColor: 'transparent'}]}>
         <Image source={active ? iconActive : icon} />
         {active && <Text style={styles.textStyle}>{text}</Text>}
       </Layout>
@@ -27,24 +29,24 @@ const styles = StyleSheet.create({
     width: 130,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#EBEDFF",
+    backgroundColor: '#EBEDFF',
     paddingHorizontal: 12,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-around"
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
   },
   flexBox: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   textStyle: {
-    color: "#2A327D",
+    color: '#2A327D',
     fontSize: 14,
     marginLeft: 6,
-    fontWeight: "bold"
-  }
+    fontWeight: 'bold',
+  },
 });
 
 export default BtnNavigation;

@@ -1,6 +1,6 @@
 import {Button, Layout, Text} from '@ui-kitten/components';
 import React from 'react';
-import {Image, StyleSheet} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 
 interface Props {}
 
@@ -14,9 +14,16 @@ const TransactionActivity = (props: Props) => {
         <Layout style={styles.textBtnContainer}>
           <Text style={styles.titleStyle}>Bắt đầu</Text>
           <Text style={styles.subTitleStyle}>Cập nhật dữ liệu</Text>
-          <Button style={styles.btnStyle}>
-            <Text style={{color: 'white'}}>+</Text>
-          </Button>
+          <TouchableOpacity>
+            <Layout style={styles.btnStyle}>
+              <Text style={{color: 'white', fontSize: 20}}>+</Text>
+            </Layout>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <Layout style={styles.btnTwoStyle}>
+              <Text style={{color: '#fff', fontSize: 18}}>Xem mục tiêu tiết kiệm</Text>
+            </Layout>
+          </TouchableOpacity>
         </Layout>
       </Layout>
     </Layout>
@@ -25,12 +32,10 @@ const TransactionActivity = (props: Props) => {
 
 const styles = StyleSheet.create({
   boxContainer: {
-    display: 'flex',
     alignItems: 'center',
     marginTop: 120,
   },
   textBtnContainer: {
-    display: 'flex',
     alignItems: 'center',
     marginTop: 60,
   },
@@ -48,10 +53,23 @@ const styles = StyleSheet.create({
     borderWidth: 0,
     borderRadius: 100,
     marginTop: 40,
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   icon: {
     width: 32,
     height: 32,
+  },
+  btnTwoStyle: {
+    width: 200,
+    height: 44,
+    backgroundColor: '#00C6C6',
+    borderRadius: 30,
+    marginTop: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
 

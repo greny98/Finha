@@ -1,6 +1,7 @@
 import React from 'react';
 import {Layout, Text, Button} from '@ui-kitten/components';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, TouchableHighlight, TouchableOpacity} from 'react-native';
+import CustomButton from 'components/common/CustomButton';
 
 interface Props {}
 
@@ -33,12 +34,7 @@ const CardInfo = (props: any) => {
               },
             ]}
           />
-          <Layout
-            style={[
-              styles.line,
-              {width: upRateString, backgroundColor: '#00C6BA'},
-            ]}
-          />
+          <Layout style={[styles.line, {width: upRateString, backgroundColor: '#00C6BA'}]} />
         </Layout>
       </Layout>
 
@@ -48,7 +44,9 @@ const CardInfo = (props: any) => {
           <Text>{savePrice}</Text>
         </Layout>
         <Layout>
-          <Button style={styles.btnStyle}>+</Button>
+          <TouchableOpacity style={styles.btnStyle}>
+            <Text style={{color: '#fff', fontSize: 24}}>+</Text>
+          </TouchableOpacity>
         </Layout>
       </Layout>
     </Layout>
@@ -83,7 +81,12 @@ const styles = StyleSheet.create({
   btnStyle: {
     backgroundColor: '#00C6BA',
     borderWidth: 0,
-    borderRadius: 16,
+    borderRadius: 10,
+    width: 36,
+    height: 36,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 
