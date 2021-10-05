@@ -16,6 +16,8 @@ import {
 import {models} from 'db/models';
 import moment from 'moment';
 import TransactionActivity from 'screens/main/TransactionActivity';
+import {Provider} from 'react-redux';
+import store from 'redux/stores';
 
 const MyTheme = {
   ...DefaultTheme,
@@ -66,10 +68,12 @@ const App = () => {
 
   return (
     <ApplicationProvider {...eva} theme={eva.light}>
-      <IconRegistry icons={EvaIconsPack} />
-      <NavigationContainer theme={MyTheme}>
-        <TransactionActivity />
-      </NavigationContainer>
+      <Provider store={store}>
+        <IconRegistry icons={EvaIconsPack} />
+        <NavigationContainer theme={MyTheme}>
+          <TransactionActivity />
+        </NavigationContainer>
+      </Provider>
     </ApplicationProvider>
   );
 };
