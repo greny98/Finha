@@ -18,6 +18,7 @@ import moment from 'moment';
 import TransactionActivity from 'screens/main/TransactionActivity';
 import {Provider} from 'react-redux';
 import store from 'redux/stores';
+import {mockups} from "db/mockups";
 
 const MyTheme = {
   ...DefaultTheme,
@@ -40,28 +41,7 @@ const App = () => {
       if (wallets.length === 0) {
         await createWallets(db);
       }
-      await createTransactions(db, {
-        categoryId: 1,
-        factor: -1,
-        note: 'Test',
-        amount: 100000,
-        date: moment(new Date()).startOf('day').add(5, 'hour').toDate(),
-        walletId: 1,
-      });
-      await createTransactions(db, {
-        categoryId: 1,
-        factor: -1,
-        note: 'Test 1234',
-        amount: 100000,
-        date: moment(new Date()).endOf('day').subtract(5, 'hour').toDate(),
-        walletId: 1,
-      });
-      const trans = await getTransactions(
-        db,
-        moment(new Date()).startOf('day').toDate(),
-        moment(new Date()).endOf('day').toDate(),
-      );
-      console.log('==== ', trans);
+      await mockups(db)
     };
     loadDb();
   }, []);

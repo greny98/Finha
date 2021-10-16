@@ -1,4 +1,4 @@
-import {enablePromise, openDatabase, SQLiteDatabase} from 'react-native-sqlite-storage';
+import {enablePromise, openDatabase, ResultSet, SQLiteDatabase} from 'react-native-sqlite-storage';
 import moment from 'moment';
 
 enablePromise(true);
@@ -13,7 +13,19 @@ export interface Column {
   defaultValue?: any;
   primaryKey?: boolean;
   notNull?: boolean;
+  unique?: boolean;
 }
+
+// ------------------------------- Post Handler: Parse to Objects ---------------------------------------
+const postHandler = <T>(results: [ResultSet]) => {
+  const transactions: T[] = [];
+  results.forEach(result => {
+    for (let index = 0; index < result.rows.length; index++) {
+      transactions.push(result.rows.item(index));
+    }
+  });
+  return transactions;
+};
 
 // ------------------------------- Create Table ---------------------------------------
 export const createTable = async (db: SQLiteDatabase, tableName: string, columns: Column[]) => {
@@ -32,6 +44,10 @@ export const createTable = async (db: SQLiteDatabase, tableName: string, columns
     if (col.primaryKey) {
       colInfos += ' PRIMARY KEY AUTOINCREMENT';
     }
+    // Unique
+    if (col.unique) {
+      colInfos += ' UNIQUE';
+    }
     // add , if not last col
     if (index < columns.length - 1) {
       colInfos += ',';
@@ -46,6 +62,7 @@ export const createTable = async (db: SQLiteDatabase, tableName: string, columns
 
 export const deleteTable = async (db: SQLiteDatabase, tableName: string) => {
   const query = `drop table ${tableName}`;
+  console.log(query);
   await db.executeSql(query);
 };
 
@@ -64,6 +81,7 @@ export const getWallets = async (db: SQLiteDatabase) => {
   const query = `
     SELECT *
     FROM wallets`;
+  console.log("=====", query);
   const wallets: {id: number; name: string}[] = [];
   const results = await db.executeSql(query);
   results.forEach(result => {
@@ -86,14 +104,15 @@ export interface Transaction {
   note: string;
 }
 
-export const createTransactions = (db: SQLiteDatabase, transaction: Transaction) => {
+export const createTransactions = async (db: SQLiteDatabase, transaction: Transaction) => {
   const {categoryId, walletId, factor, date, amount, note} = transaction;
   const query = `
       INSERT INTO transactions (categoryId, walletId, factor, date, amount, note) 
       VALUES(${categoryId}, ${walletId}, ${factor}, '${moment(date).format(
     'YYYY-MM-DD HH:mm:SS.SSS',
   )}', ${amount}, '${note}');`;
-  return db.executeSql(query);
+  const results = await db.executeSql(query);
+  return postHandler(results);
 };
 
 export const getTransactions = async (db: SQLiteDatabase, start: Date, end: Date) => {
@@ -101,16 +120,18 @@ export const getTransactions = async (db: SQLiteDatabase, start: Date, end: Date
   const endStr = moment(end).format('YYYY-MM-DD HH:mm:SS.SSS');
 
   const query = `
-    SELECT * FROM transactions WHERE date BETWEEN '${startStr}' AND '${endStr}'
+    SELECT * FROM
+        (SELECT * FROM
+            (SELECT * FROM transactions WHERE date BETWEEN '${startStr}' AND '${endStr}') AS trans
+              LEFT JOIN 
+              (SELECT name as category, id FROM categories) as categories 
+              ON trans.categoryId = categories.id) as trans_with_cate
+        LEFT JOIN (SELECT name as wallet, id FROM wallets) as wallets 
+        ON trans_with_cate.walletId = wallets.id;
   `;
-  const transactions: Transaction[] = [];
+
   const results = await db.executeSql(query);
-  results.forEach(result => {
-    for (let index = 0; index < result.rows.length; index++) {
-      transactions.push(result.rows.item(index));
-    }
-  });
-  return transactions;
+  return postHandler(results);
 };
 
 // ------------------------------- Categories Query ---------------------------------------
@@ -120,18 +141,22 @@ export interface ICategory {
   name: string;
   color: string;
 }
-export const createCategories = (db: SQLiteDatabase, categoryInfo: ICategory) => {
+export const createCategories = async (db: SQLiteDatabase, categoryInfo: ICategory) => {
   const {name, color} = categoryInfo;
   const query = `
     INSERT INTO categories (name, color)
-    VALUES(${name}, ${color});
+    VALUES('${name}', '${color}');
   `;
-  return db.executeSql(query);
+  console.log('======\n', query);
+  const results = await db.executeSql(query);
+  return postHandler(results);
 };
 
-export const getAllCategories = (db: SQLiteDatabase) => {
+export const getAllCategories = async (db: SQLiteDatabase) => {
   const query = `
     SELECT * FROM categories
   `;
-  return db.executeSql(query);
+  console.log('======\n', query);
+  const results = await db.executeSql(query);
+  return postHandler(results);
 };
