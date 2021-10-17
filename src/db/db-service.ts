@@ -67,6 +67,11 @@ export const deleteTable = async (db: SQLiteDatabase, tableName: string) => {
 };
 
 // ------------------------------- Wallet Query ---------------------------------------
+export interface Wallet {
+  id?: number;
+  name: string;
+}
+
 export const createWallets = async (db: SQLiteDatabase) => {
   const wallets = ['Digital Wallet', 'Cash', 'Internet Banking'];
   await Promise.all(
@@ -81,15 +86,9 @@ export const getWallets = async (db: SQLiteDatabase) => {
   const query = `
     SELECT *
     FROM wallets`;
-  console.log("=====", query);
-  const wallets: {id: number; name: string}[] = [];
+  console.log('=====', query);
   const results = await db.executeSql(query);
-  results.forEach(result => {
-    for (let index = 0; index < result.rows.length; index++) {
-      wallets.push(result.rows.item(index));
-    }
-  });
-  return wallets;
+  return postHandler<Wallet>(results);
 };
 
 // ------------------------------- Transactions Query ---------------------------------------
@@ -115,10 +114,26 @@ export const createTransactions = async (db: SQLiteDatabase, transaction: Transa
   return postHandler(results);
 };
 
-export const getTransactions = async (db: SQLiteDatabase, start: Date, end: Date) => {
+export interface GetTransactionResult extends Transaction {
+  category: string;
+  wallet: string;
+}
+
+export const getTransactions = async (db: SQLiteDatabase, start: Date, end: Date, filters = {}) => {
   const startStr = moment(start).format('YYYY-MM-DD HH:mm:SS.SSS');
   const endStr = moment(end).format('YYYY-MM-DD HH:mm:SS.SSS');
-
+  let where = '';
+  if (Object.keys(filters).length > 0) {
+    where = 'WHERE ';
+    Object.entries(filters).forEach(([field, value]) => {
+      console.log('====== field, value', field, value)
+      let editedValue = value;
+      if (typeof value == 'string') {
+        editedValue = `'${value}'`;
+      }
+      where += `${field} = ${editedValue} `;
+    });
+  }
   const query = `
     SELECT * FROM
         (SELECT * FROM
@@ -127,11 +142,12 @@ export const getTransactions = async (db: SQLiteDatabase, start: Date, end: Date
               (SELECT name as category, id FROM categories) as categories 
               ON trans.categoryId = categories.id) as trans_with_cate
         LEFT JOIN (SELECT name as wallet, id FROM wallets) as wallets 
-        ON trans_with_cate.walletId = wallets.id;
+        ON trans_with_cate.walletId = wallets.id 
+    ${where};
   `;
-
+  console.log('=====\n', query)
   const results = await db.executeSql(query);
-  return postHandler(results);
+  return postHandler<GetTransactionResult>(results);
 };
 
 // ------------------------------- Categories Query ---------------------------------------
@@ -154,8 +170,31 @@ export const createCategories = async (db: SQLiteDatabase, categoryInfo: ICatego
 
 export const getAllCategories = async (db: SQLiteDatabase) => {
   const query = `
-    SELECT * FROM categories
+    SELECT * FROM categories;
   `;
+  console.log('======\n', query);
+  const results = await db.executeSql(query);
+  return postHandler(results);
+};
+
+// ------------------------------- Access Status ---------------------------------------
+export interface AccessStatus {
+  id: number;
+  status: string;
+}
+
+export const createAccessStatus = async (db: SQLiteDatabase) => {
+  const query = `
+    INSERT INTO access_status (active)
+    VALUES(1);
+  `;
+  console.log('======\n', query);
+  const results = await db.executeSql(query);
+  return postHandler(results);
+};
+
+export const getAccessStatus = async (db: SQLiteDatabase) => {
+  const query = `SELECT * FROM access_status;`;
   console.log('======\n', query);
   const results = await db.executeSql(query);
   return postHandler(results);

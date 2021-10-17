@@ -25,6 +25,6 @@ export const models: {[key: string]: Column[]} = {
   ],
   access_status: [
     {name: 'id', primaryKey: true, dataType: 'INTEGER', notNull: true},
-    {name: 'status', dataType: ''},
+    {name: 'active', dataType: 'INTEGER', defaultValue: 1},
   ],
 };
