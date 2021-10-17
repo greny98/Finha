@@ -1,4 +1,4 @@
-import {Icon, Layout, Text, TopNavigation, TopNavigationAction} from '@ui-kitten/components';
+import {Icon, Layout, Text, TopNavigation} from '@ui-kitten/components';
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import CustomModal from 'components/common/CustomModal';
@@ -10,12 +10,12 @@ const FirstIntroActivity = (props: Props) => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
   const navigateHome = () => {
-    navigation.navigate('Tab',{screen:'DataAnalysis'});
+    navigation.navigate('Tab', {screen: 'DataAnalysis'});
   };
 
-  const nextIntro = () =>{
-    navigation.navigate('IntroTwo')
-  }
+  const nextIntro = () => {
+    navigation.navigate('IntroTwo');
+  };
 
   const renderRightActions = () => (
     <TouchableOpacity onPress={navigateHome}>

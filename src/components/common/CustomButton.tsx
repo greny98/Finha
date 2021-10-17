@@ -10,10 +10,7 @@ interface Props {
 const CustomButton = (props: Props) => {
   const {title, onPress} = props;
   return (
-    <TouchableHighlight
-      style={styles.btnStyle}
-      underlayColor="#008a81"
-      onPress={onPress}>
+    <TouchableHighlight style={styles.btnStyle} underlayColor="#008a81" onPress={onPress}>
       <Text style={{color: '#fff'}}>{title}</Text>
     </TouchableHighlight>
   );
@@ -23,7 +20,7 @@ const styles = StyleSheet.create({
   btnStyle: {
     backgroundColor: '#00C6C6',
     borderWidth: 0,
-    width: 150,
+    width: 140,
     height: 40,
     borderRadius: 60,
     marginTop: 40,

@@ -1,27 +1,33 @@
 import {Button, Layout, Text} from '@ui-kitten/components';
 import React from 'react';
-import {Image, StyleSheet} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
 
 interface Props {}
 
 const SuccessSaveMoney = (props: Props) => {
+  //Navigation
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
+  const navigateHome = () => {
+    navigation.navigate('Tab', {screen: 'Home'});
+  };
+
   return (
     <Layout style={styles.root}>
       <Layout style={styles.formContainer}>
-        <Image
-          source={require('assets/images/check-circle-2.png')}
-        />
+        <Image source={require('assets/images/check-circle-2.png')} />
         <Layout style={{marginTop: 40}}>
-          <Text style={styles.textStyle}>
-            Ting Ting! Mục tiêu tiết kiệm của bạn vừa được thiết lập
-          </Text>
-          <Text style={styles.textStyle}>
-            Bạn cần tiết kiệm 200.000 VNĐ mỗi ngày
-          </Text>
+          <Text style={styles.textStyle}>Ting Ting! Mục tiêu tiết kiệm của bạn vừa được thiết lập</Text>
+          <Text style={styles.textStyle}>Bạn cần tiết kiệm 200.000 VNĐ mỗi ngày</Text>
         </Layout>
-        <Layout style={{display: 'flex', alignItems: 'center'}}>
-          <Button style={styles.btnStyle}>Xác nhận</Button>
-        </Layout>
+        <TouchableOpacity onPress={navigateHome}>
+          <Layout style={{display: 'flex', alignItems: 'center'}}>
+            <Layout style={styles.btnStyle}>
+              <Text style={{color: '#fff'}}>Xác nhận</Text>
+            </Layout>
+          </Layout>
+        </TouchableOpacity>
       </Layout>
     </Layout>
   );
@@ -55,6 +61,8 @@ const styles = StyleSheet.create({
     width: 150,
     height: 40,
     borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 export default SuccessSaveMoney;

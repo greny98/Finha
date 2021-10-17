@@ -1,19 +1,18 @@
-import {
-  Button,
-  Icon,
-  Layout,
-  Tab,
-  TabBar,
-  Text,
-  TopNavigation,
-  TopNavigationAction,
-} from '@ui-kitten/components';
+import {Button, Icon, Layout, Tab, TabBar, Text, TopNavigation, TopNavigationAction} from '@ui-kitten/components';
 import CustomButton from 'components/common/CustomButton';
 import React, {useState} from 'react';
 import {Dimensions, StyleSheet} from 'react-native';
 import TextInputGroup from 'components/common/TextInputGroup';
+import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
 
 const NewFolderForm = () => {
+  //Navigation
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
+  const navigateSuccess = () => {
+    navigation.navigate('Sub', {screen: 'CreateSuccess'});
+  };
+
   const [selectedIndex, setSelectedIndex] = React.useState(0);
   const [folderName, setFolderName] = useState('');
   const [walletType, setWalletType] = useState('');
@@ -27,12 +26,10 @@ const NewFolderForm = () => {
     }
   };
 
-  const BackIcon = (props: any) => (
-    <Icon {...props} name="arrow-back" fill="#FFF" />
-  );
+  const BackIcon = (props: any) => <Icon {...props} name="arrow-back" fill="#FFF" />;
 
   const BackAction = () => (
-    <TopNavigationAction icon={BackIcon} onPress={() => console.log('pushs')} />
+    <TopNavigationAction icon={BackIcon} onPress={() => navigation.navigate('Tab', {screen: 'Home'})} />
   );
 
   const SetTitle = (props: any, title: string) => (
@@ -97,7 +94,7 @@ const NewFolderForm = () => {
           onChangeText={text => setNotes(text)}
           label="Ghi chú"
         />
-        <CustomButton title="Lưu" onPress={() => {}} />
+        <CustomButton title="Lưu" onPress={navigateSuccess} />
       </Layout>
     </Layout>
   );

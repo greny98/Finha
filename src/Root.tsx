@@ -14,7 +14,7 @@ const Root = (props: Props) => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
   useEffect(() => {
-    navigation.navigate('Intro');
+    navigation.navigate('Tab');
   }, []);
 
   return (

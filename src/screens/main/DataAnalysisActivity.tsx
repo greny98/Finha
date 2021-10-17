@@ -1,12 +1,6 @@
 import React, {useState} from 'react';
 import {Layout, Text} from '@ui-kitten/components';
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  ScrollView,
-  Dimensions,
-} from 'react-native';
+import {StyleSheet, View, SafeAreaView, ScrollView, Dimensions} from 'react-native';
 import ButtonGroupA from 'components/data-analysis/ButtonGroupA';
 import ButtonGroupB from 'components/data-analysis/ButtonGroupB';
 import StatisticGroup from 'components/data-analysis/StatisticGroup';
@@ -53,8 +47,7 @@ const DataAnalysisActivity = (props: Props) => {
   const totalPrice = Object.keys(infoDict).reduce((total, eachItem) => {
     return total + infoDict[eachItem].price;
   }, 0);
-  const countPercentage = (price: number) =>
-    Math.round((price / totalPrice) * 100);
+  const countPercentage = (price: number) => Math.round((price / totalPrice) * 100);
 
   const pieChartData = Object.keys(infoDict).map(item => ({
     xName: item,
@@ -64,9 +57,7 @@ const DataAnalysisActivity = (props: Props) => {
 
   return (
     <SafeAreaView>
-      <ScrollView
-        style={{marginBottom: 40}}
-        showsVerticalScrollIndicator={false}>
+      <ScrollView style={{}} showsVerticalScrollIndicator={false}>
         <Layout style={styles.btnGroup}>
           <ButtonGroupA title="Thu" active={true} />
           <ButtonGroupA title="Chi" active={false} />
@@ -121,11 +112,7 @@ const DataAnalysisActivity = (props: Props) => {
         <Layout style={styles.infoContainer}>
           {Object.keys(infoDict).map(item => (
             <Layout style={{marginBottom: 8}} key={item}>
-              <StatisticGroup
-                color={infoDict[item].color}
-                text={infoDict[item].name}
-                price={infoDict[item].price}
-              />
+              <StatisticGroup color={infoDict[item].color} text={infoDict[item].name} price={infoDict[item].price} />
             </Layout>
           ))}
         </Layout>

@@ -1,9 +1,10 @@
 import React from 'react';
 import {Layout, Text} from '@ui-kitten/components';
-import {StyleSheet, Image, SafeAreaView, ScrollView} from 'react-native';
+import {StyleSheet, Image, SafeAreaView, ScrollView, TouchableOpacity} from 'react-native';
 import CardInfo from 'components/home/CardInfo';
 import InfoGroup from 'components/home/InfoGroup';
 import LineChartGroup from 'components/home/LineChartGroup';
+import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
 
 interface Props {}
 
@@ -39,6 +40,11 @@ const cardDict: any = {
 };
 
 const HomeActivity = (props: Props) => {
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
+  const navigateNoteTransaction = () => {
+    navigation.navigate('Sub', {screen: 'NoteTransaction'});
+  };
   return (
     <SafeAreaView>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -60,8 +66,11 @@ const HomeActivity = (props: Props) => {
           </ScrollView>
         </Layout>
         <Layout style={styles.groupContainer}>
-          <Layout>
+          <Layout style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
             <Text style={styles.titleStyle}>Các khoản thu chi hôm nay</Text>
+            <TouchableOpacity onPress={navigateNoteTransaction}>
+              <Text style={{color: 'blue', fontSize: 18}}>Xem thêm</Text>
+            </TouchableOpacity>
           </Layout>
           <Layout style={styles.infoGroupContainer}>
             {Object.keys(infoDict).map(item => {
@@ -111,7 +120,7 @@ const styles = StyleSheet.create({
   },
   groupContainer: {
     marginTop: 12,
-    marginLeft: 24,
+    marginHorizontal: 16,
   },
   titleStyle: {
     fontSize: 20,

@@ -1,7 +1,8 @@
 import {Button, Input, Layout, Text} from '@ui-kitten/components';
 import React, {useState} from 'react';
-import {Image, StyleSheet} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import TextInputGroup from 'components/common/TextInputGroup';
+import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
 
 interface Props {}
 
@@ -10,15 +11,19 @@ const SaveMoneyForm = (props: Props) => {
   const [folderName, setFolderName] = useState('');
   const [walletType, setWalletType] = useState('');
 
+  //Navigation
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
+  const navigateSuccessSaveMoney = () => {
+    navigation.navigate('NoticeSuccess');
+  };
+
   return (
     <Layout style={styles.root}>
       <Layout style={styles.formContainer}>
         <Layout>
           <Text>Số tiền tiết kiệm mục tiêu</Text>
-          <Input
-            onChangeText={nextValue => setPrice(Number(nextValue))}
-            style={styles.inputStyle}
-          />
+          <Input onChangeText={nextValue => setPrice(Number(nextValue))} style={styles.inputStyle} />
         </Layout>
         <Layout style={styles.groupText}>
           <TextInputGroup
@@ -34,18 +39,16 @@ const SaveMoneyForm = (props: Props) => {
             label="Thời gian"
           />
         </Layout>
-        <Layout style={{display: 'flex', alignItems: 'center'}}>
-          <Button style={styles.btnStyle}>Xác nhận</Button>
-        </Layout>
+        <TouchableOpacity onPress={navigateSuccessSaveMoney}>
+          <Layout style={{display: 'flex', alignItems: 'center'}}>
+            <Layout style={styles.btnStyle}>
+              <Text style={{color: '#fff'}}>Xác nhận</Text>
+            </Layout>
+          </Layout>
+        </TouchableOpacity>
 
-        <Image
-          source={require('assets/icon/face-icon.png')}
-          style={styles.faceStyle}
-        />
-        <Image
-          source={require('assets/icon/star-icon.png')}
-          style={styles.starStyle}
-        />
+        <Image source={require('assets/icon/face-icon.png')} style={styles.faceStyle} />
+        <Image source={require('assets/icon/star-icon.png')} style={styles.starStyle} />
       </Layout>
     </Layout>
   );
@@ -88,6 +91,8 @@ const styles = StyleSheet.create({
     width: 150,
     height: 40,
     borderRadius: 60,
+    justifyContent:'center',
+    alignItems:'center'
   },
   faceStyle: {
     position: 'absolute',

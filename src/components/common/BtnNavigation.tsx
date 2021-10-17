@@ -26,12 +26,10 @@ const BtnNavigation = (props: Props) => {
 
 const styles = StyleSheet.create({
   btnContainer: {
-    width: 130,
     height: 40,
     borderRadius: 20,
     backgroundColor: '#EBEDFF',
     paddingHorizontal: 12,
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',

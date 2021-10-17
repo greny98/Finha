@@ -1,11 +1,17 @@
 import React from 'react';
-import {Layout, Text, Button} from '@ui-kitten/components';
-import {StyleSheet, TouchableHighlight, TouchableOpacity} from 'react-native';
-import CustomButton from 'components/common/CustomButton';
+import {Layout, Text} from '@ui-kitten/components';
+import {StyleSheet, TouchableOpacity} from 'react-native';
+import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
 
 interface Props {}
 
 const CardInfo = (props: any) => {
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
+  const navigateCreatExpense = () => {
+    navigation.navigate('Sub', {screen: 'CreateFolder'});
+  };
+
   const {day, downPrice, upPrice, savePrice} = props;
 
   const downRate = (downPrice / (downPrice + upPrice)) * 100;
@@ -44,7 +50,7 @@ const CardInfo = (props: any) => {
           <Text>{savePrice}</Text>
         </Layout>
         <Layout>
-          <TouchableOpacity style={styles.btnStyle}>
+          <TouchableOpacity style={styles.btnStyle} onPress={navigateCreatExpense}>
             <Text style={{color: '#fff', fontSize: 24}}>+</Text>
           </TouchableOpacity>
         </Layout>

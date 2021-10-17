@@ -1,17 +1,19 @@
 import {Layout, Text} from '@ui-kitten/components';
 import CustomButton from 'components/common/CustomButton';
 import React from 'react';
-import {Image, StyleSheet} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
 
 interface Props {}
 
-const SuccessCreateActivity = (props: Props) => {
+const Profile = (props: Props) => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
-  const navigateNote = () => {
-    navigation.navigate('Sub', {screen: 'NoteTransaction'});
+  const navigateIncome = () => {
+    navigation.navigate('Sub', {screen: 'Income'});
   };
+
+  
   return (
     <Layout>
       <Layout style={styles.boxContainer}>
@@ -19,9 +21,13 @@ const SuccessCreateActivity = (props: Props) => {
           <Image source={require('assets/images/document-success.png')} />
         </Layout>
         <Layout style={styles.textBtnContainer}>
-          <Text style={styles.titleStyle}>GHI CHÉP THÀNH CÔNG!</Text>
-          <Text style={styles.subTitleStyle}>Cập nhật thường xuyên khoản thu chi mỗi ngày nhé!</Text>
-          <CustomButton title="Xem sổ ghi chép" onPress={navigateNote} />
+          <Text style={styles.titleStyle}>QUẢN LÝ THÔNG TIN!</Text>
+          <Text style={styles.subTitleStyle}>Cập nhật thông tin ví và thể loại giao dịch</Text>
+          <TouchableOpacity onPress={navigateIncome}>
+            <Layout style={[styles.btnTwoStyle]}>
+              <Text style={{color: '#fff', fontSize: 18}}>Xem thu nhập</Text>
+            </Layout>
+          </TouchableOpacity>
         </Layout>
       </Layout>
     </Layout>
@@ -49,6 +55,15 @@ const styles = StyleSheet.create({
     marginTop: 10,
     color: '#C0C2D1',
   },
+  btnTwoStyle: {
+    backgroundColor: '#00C6C6',
+    borderRadius: 30,
+    marginTop: 50,
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+  },
 });
 
-export default SuccessCreateActivity;
+export default Profile;

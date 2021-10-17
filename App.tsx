@@ -14,7 +14,6 @@ import {
   getWallets,
 } from 'db/db-service';
 import {models} from 'db/models';
-import moment from 'moment';
 import TransactionActivity from 'screens/main/TransactionActivity';
 import {Provider} from 'react-redux';
 import store from 'redux/stores';
@@ -33,8 +32,8 @@ const App = () => {
   useEffect(() => {
     const loadDb = async () => {
       const db = await getDBConnection();
-      const deleteTables = Object.keys(models).map(tableName => deleteTable(db, tableName));
-      await Promise.all(deleteTables);
+      // const deleteTables = Object.keys(models).map(tableName => deleteTable(db, tableName));
+      // await Promise.all(deleteTables);
       const createTables = Object.keys(models).map(tableName => createTable(db, tableName, models[tableName]));
       await Promise.all(createTables);
       const wallets = await getWallets(db);
@@ -51,7 +50,7 @@ const App = () => {
       <Provider store={store}>
         <IconRegistry icons={EvaIconsPack} />
         <NavigationContainer theme={MyTheme}>
-          <TransactionActivity />
+          <Root />
         </NavigationContainer>
       </Provider>
     </ApplicationProvider>

@@ -3,6 +3,7 @@ import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import NewFolderForm from 'screens/sub/NewFolderForm';
 import SuccessCreateActivity from 'screens/sub/SuccessCreateActivity';
 import IncomeActivity from 'screens/sub/IncomeActivity';
+import NoteTransaction from 'screens/sub/NoteTransaction';
 
 interface Props {}
 
@@ -17,6 +18,7 @@ const SubStack = (props: Props) => {
       <Stack.Screen name="CreateFolder" component={NewFolderForm} />
       <Stack.Screen name="CreateSuccess" component={SuccessCreateActivity} />
       <Stack.Screen name="Income" component={IncomeActivity} />
+      <Stack.Screen name="NoteTransaction" component={NoteTransaction} />
     </Stack.Navigator>
   );
 };

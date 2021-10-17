@@ -1,39 +1,59 @@
 import {Layout, Text} from '@ui-kitten/components';
 import React from 'react';
-import {Image, StyleSheet, TouchableOpacity} from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, SafeAreaView, ScrollView} from 'react-native';
+import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
 
 interface Props {}
 
 const TransactionActivity = (props: Props) => {
+  //Navigation
+  const navigation = useNavigation<NavigationProp<ParamListBase>>();
+
+  const navigateCreateExpense = () => {
+    navigation.navigate('Sub', {screen: 'CreateFolder'});
+  };
+
+  const navigateSaveMoney = () => {
+    navigation.navigate('Target', {screen: 'SaveMoneyLoading'});
+  };
+
+  const navigateIncome = () => {
+    navigation.navigate('Sub', {screen: 'Income'});
+  };
   return (
-    <Layout>
-      <Layout style={styles.boxContainer}>
+    <SafeAreaView>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Layout>
-          <Image source={require('assets/images/document.png')} />
-        </Layout>
-        <Layout style={styles.textBtnContainer}>
-          <Text style={styles.titleStyle}>Bắt đầu</Text>
-          <Text style={styles.subTitleStyle}>Cập nhật dữ liệu</Text>
-          <TouchableOpacity>
-            <Layout style={styles.btnStyle}>
-              <Text style={{color: 'white', fontSize: 20}}>+</Text>
+          <Layout style={styles.boxContainer}>
+            <Layout>
+              <Image source={require('assets/images/document.png')} />
             </Layout>
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Layout style={styles.btnTwoStyle}>
-              <Text style={{color: '#fff', fontSize: 18}}>Xem mục tiêu tiết kiệm</Text>
+            <Layout style={styles.textBtnContainer}>
+              <Text style={styles.titleStyle}>Bắt đầu</Text>
+              <Text style={styles.subTitleStyle}>Cập nhật dữ liệu</Text>
+              <TouchableOpacity onPress={navigateCreateExpense}>
+                <Layout style={styles.btnStyle}>
+                  <Text style={{color: 'white', fontSize: 20}}>+</Text>
+                </Layout>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={navigateSaveMoney}>
+                <Layout style={[styles.btnTwoStyle]}>
+                  <Text style={{color: '#fff', fontSize: 18}}>Xem mục tiêu tiết kiệm</Text>
+                </Layout>
+              </TouchableOpacity>
             </Layout>
-          </TouchableOpacity>
+          </Layout>
         </Layout>
-      </Layout>
-    </Layout>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   boxContainer: {
     alignItems: 'center',
-    marginTop: 120,
+    marginTop: 80,
   },
   textBtnContainer: {
     alignItems: 'center',
@@ -52,7 +72,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#00C6C6',
     borderWidth: 0,
     borderRadius: 100,
-    marginTop: 40,
+    marginTop: 30,
     width: 40,
     height: 40,
     alignItems: 'center',
@@ -63,13 +83,13 @@ const styles = StyleSheet.create({
     height: 32,
   },
   btnTwoStyle: {
-    width: 200,
-    height: 44,
     backgroundColor: '#00C6C6',
     borderRadius: 30,
-    marginTop: 28,
+    marginTop: 50,
     alignItems: 'center',
     justifyContent: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
   },
 });
 
