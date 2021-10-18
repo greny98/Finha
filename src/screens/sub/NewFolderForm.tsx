@@ -17,7 +17,6 @@ const NewFolderForm = () => {
   };
 
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  console.log('🚀 ~ file: NewFolderForm.tsx ~ line 20 ~ NewFolderForm ~ selectedIndex', selectedIndex);
   const [walletId, setWalletId] = useState(0);
   const [walletType, setWalletType] = useState<any>([]);
 
@@ -42,7 +41,6 @@ const NewFolderForm = () => {
   );
 
   // Get DATA
-
   const loadWalletAndCategory = async () => {
     const db = await getDBConnection();
     const walletList = await getWallets(db);

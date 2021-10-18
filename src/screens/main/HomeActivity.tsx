@@ -46,7 +46,22 @@ const HomeActivity = (props: Props) => {
       moment(YESTERDAY).endOf('d').toDate(),
     );
 
-    setTransToday(listToday);
+    const combinedList = Object.values(
+      listToday.reduce((obj: any, item: any) => {
+        if (obj[`${item.categoryId}-(${item.factor})`]) {
+          const objCopy = {...obj};
+          objCopy[`${item.categoryId}-(${item.factor})`].amount += item.amount;
+          return {...objCopy};
+        } else {
+          return {
+            ...obj,
+            [`${item.categoryId}-(${item.factor})`]: item,
+          };
+        }
+      }, {}),
+    );
+
+    setTransToday(combinedList);
     setTransYesterday(listYesterDay);
   };
 

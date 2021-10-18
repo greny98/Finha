@@ -48,7 +48,7 @@ const NoteTransaction = (props: Props) => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
   // STATE
   const [fromDate, setFromDate] = useState(new Date());
-  const [toDate, setToDate] = useState(moment(new Date()).add(1, 'd').toDate());
+  const [toDate, setToDate] = useState(moment().add(1, 'd').toDate());
   const [showFromDate, setShowFromDate] = useState(false);
   const [showToDate, setShowToDate] = useState(false);
 

@@ -45,7 +45,7 @@ const DataAnalysisActivity = (props: Props) => {
 
   //State
   const [transType, setTransType] = useState(0);
-  const [filterTime, setFilterTime] = useState(0);
+  const [filterTime, setFilterTime] = useState(2);
   const [transList, setTransList] = useState<any>([]);
 
   // CREATE Var  Date
@@ -71,14 +71,14 @@ const DataAnalysisActivity = (props: Props) => {
 
     const combinedList = Object.values(
       resultList.reduce((obj: any, item: any) => {
-        if (obj[item.categoryId + item.factor]) {
+        if (obj[`${item.categoryId}-(${item.factor})`]) {
           const objCopy = {...obj};
-          objCopy[item.categoryId + item.factor].amount += item.amount;
+          objCopy[`${item.categoryId}-(${item.factor})`].amount += item.amount;
           return {...objCopy};
         } else {
           return {
             ...obj,
-            [item.categoryId + item.factor]: item,
+            [`${item.categoryId}-(${item.factor})`]: item,
           };
         }
       }, {}),
@@ -127,9 +127,9 @@ const DataAnalysisActivity = (props: Props) => {
           <ButtonGroupA title="Chi" active={transType === 1} onPress={() => setTransType(1)} />
         </Layout>
         <Layout style={styles.btnGroup}>
-          <ButtonGroupB title="Năm" active={filterTime === 0} onPress={() => setFilterTime(0)} />
-          <ButtonGroupB title="Tháng" active={filterTime === 1} onPress={() => setFilterTime(1)} />
           <ButtonGroupB title="Tuần" active={filterTime === 2} onPress={() => setFilterTime(2)} />
+          <ButtonGroupB title="Tháng" active={filterTime === 1} onPress={() => setFilterTime(1)} />
+          <ButtonGroupB title="Năm" active={filterTime === 0} onPress={() => setFilterTime(0)} />
         </Layout>
         {/* Pie chart here */}
         <Layout style={{marginVertical: 40}}>

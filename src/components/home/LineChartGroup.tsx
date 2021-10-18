@@ -23,21 +23,22 @@ const LineChartGroup = (props: Props) => {
   const TODAY = new Date();
 
   const DAY: any = {
-    MONDAY: moment().startOf('week'),
-    TUESDAY: moment().startOf('week').add(1, 'd'),
-    WEDNESDAY: moment().startOf('week').add(2, 'd'),
-    THURSDAY: moment().startOf('week').add(3, 'd'),
-    FRIDAY: moment().startOf('week').add(4, 'd'),
-    SATURDAY: moment().startOf('week').add(5, 'd'),
-    SUNDAY: moment().startOf('week').add(6, 'd'),
+    MONDAY: moment().startOf('week').add(1, 'd'),
+    TUESDAY: moment().startOf('week').add(2, 'd'),
+    WEDNESDAY: moment().startOf('week').add(3, 'd'),
+    THURSDAY: moment().startOf('week').add(4, 'd'),
+    FRIDAY: moment().startOf('week').add(5, 'd'),
+    SATURDAY: moment().startOf('week').add(6, 'd'),
+    SUNDAY: moment().startOf('week').add(7, 'd'),
   };
-
+  
   const getStartDay = (day: any) => {
     return day.startOf('d').toDate();
   };
   const getEndDay = (day: any) => {
     return day.endOf('d').toDate();
   };
+  
 
   const loadListTrans = async () => {
     const db = await getDBConnection();

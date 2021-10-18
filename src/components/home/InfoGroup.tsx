@@ -13,7 +13,7 @@ const InfoGroup = (props: Props) => {
     <Layout style={{marginBottom: 8}}>
       <Layout style={styles.flexBox}>
         <Layout style={[styles.shortCutImage, {backgroundColor: getCategoryColor(data.categoryId)}]}>
-          <Text style={{textTransform: 'uppercase'}}>{data.category.slice(0, 2)}</Text>
+          <Text style={{textTransform: 'uppercase', color:'#fff'}}>{data.category.slice(0, 2)}</Text>
         </Layout>
         <Layout style={styles.infoContainer}>
           <Text style={styles.nameStyle}>{getCategoryName(data.category)}</Text>
