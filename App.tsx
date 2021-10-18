@@ -18,7 +18,7 @@ import {models} from 'db/models';
 import {Provider} from 'react-redux';
 import store from 'redux/stores';
 import {mockups} from 'db/mockups';
-import 'moment/locale/vi'
+// import 'moment/locale/vi'
 
 const MyTheme = {
   ...DefaultTheme,

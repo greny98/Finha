@@ -36,3 +36,11 @@ export const getCategoryName = (category: string) => {
       return 'Thu nhập';
   }
 };
+
+export const calcTotalTrans = (transList: any, factor: number) => {
+  return transList.length > 0
+    ? transList
+        .filter((trans: any) => trans.factor === factor)
+        .reduce((total: number, item: any) => (total += item.amount), 0)
+    : 0;
+};

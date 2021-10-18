@@ -12,8 +12,8 @@ interface Props {}
 
 const Profile = (props: Props) => {
   const [price, setPrice] = useState(0);
+  const [input, setInput] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const dispatch = useDispatch();
 
   const START_MONTH = moment(new Date()).startOf('M').toDate();
   const END_MONTH = moment(new Date()).endOf('M').toDate();
@@ -47,13 +47,21 @@ const Profile = (props: Props) => {
     <Layout style={styles.root}>
       <Layout style={{alignItems: 'center'}}>
         <Layout style={[styles.boxContainer, {padding: 12, marginBottom: 20}]}>
-          <Text style={styles.textStyle}>Tổng thu nhập tháng hiện tại: </Text>
-          <Text style={{fontSize: 24, fontWeight: 'bold'}}>{convertCurrencyVN(price)}</Text>
+          {price !== 0 ? (
+            <>
+              <Text style={styles.textStyle}>Tổng thu nhập tháng hiện tại: </Text>
+              <Text style={{fontSize: 24, fontWeight: 'bold'}}>{convertCurrencyVN(price)}</Text>
+            </>
+          ) : (
+            <Text style={[styles.textStyle, {textAlign: 'center'}]}>
+              Bạn chưa thiết lập thu nhập. Xin hãy thiết lập thu nhập của mình
+            </Text>
+          )}
         </Layout>
         <Layout>
           <TouchableOpacity onPress={() => setShowModal(true)}>
             <Layout style={[styles.btnStyle]}>
-              <Text style={{color: '#fff'}}>Thiết lập thu nhập</Text>
+              <Text style={{color: '#fff'}}>{price === 0 ? 'Thiết lập thu nhập' : 'Thay đổi thu nhập'}</Text>
             </Layout>
           </TouchableOpacity>
         </Layout>
@@ -63,7 +71,7 @@ const Profile = (props: Props) => {
         <Layout style={[styles.boxContainer, styles.modalContainer]}>
           <Text style={styles.textStyle}>Tổng thu nhập tháng của bạn</Text>
           <Layout style={[styles.boxContainer, {flexDirection: 'row'}]}>
-            <Input onChangeText={nextValue => setPrice(Number(nextValue))} style={styles.inputStyle} />
+            <Input onChangeText={nextValue => setInput(nextValue)} style={styles.inputStyle} />
             <Text style={styles.textStyle}>VND</Text>
           </Layout>
           <Layout style={{flexDirection: 'row', justifyContent: 'space-between'}}>

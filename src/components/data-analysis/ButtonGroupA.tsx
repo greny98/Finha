@@ -5,12 +5,13 @@ import {StyleSheet, TouchableOpacity} from 'react-native';
 interface Props {
   active?: boolean;
   title: string;
+  onPress:any
 }
 
 const ButtonGroupA = (props: Props) => {
-  const {active = true, title} = props;
+  const {active = true, title,onPress} = props;
   return (
-    <TouchableOpacity>
+    <TouchableOpacity onPress={onPress}>
       <Layout
         style={[
           styles.btnStyle,

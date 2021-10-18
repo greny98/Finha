@@ -7,6 +7,7 @@ import LineChartGroup from 'components/home/LineChartGroup';
 import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
 import {getDBConnection, getTransactions} from 'db/db-service';
 import moment from 'moment';
+import {calcTotalTrans} from 'utils/utils';
 
 interface Props {}
 
@@ -49,30 +50,21 @@ const HomeActivity = (props: Props) => {
     setTransYesterday(listYesterDay);
   };
 
-  const totalUpEachDay = Math.round(salary / 30);
-  const totalDownToday =
-    transToday.length > 0
-      ? transToday
-          .filter((trans: any) => trans.factor === -1)
-          .reduce((total: number, item: any) => (total += item.amount), 0)
-      : 0;
-  const totalDownYesterday =
-    transYesterday.length > 0
-      ? transYesterday
-          .filter((trans: any) => trans.factor === -1)
-          .reduce((total: number, item: any) => (total += item.amount), 0)
-      : 0;
+  const totalUpToday = calcTotalTrans(transToday, 1) + Math.round(salary / 30);
+  const totalDownToday = calcTotalTrans(transToday, -1);
+  const totalUpYesterday = calcTotalTrans(transYesterday, 1) + Math.round(salary / 30);
+  const totalDownYesterday = calcTotalTrans(transYesterday, -1);
 
   const cardDict: any = {
     'Hôm nay': {
       downPrice: totalDownToday,
-      upPrice: totalUpEachDay,
-      savePrice: totalUpEachDay - totalDownToday,
+      upPrice: totalUpToday,
+      savePrice: totalUpToday - totalDownToday,
     },
     'Hôm qua': {
       downPrice: totalDownYesterday,
-      upPrice: totalUpEachDay,
-      savePrice: totalUpEachDay - totalDownYesterday,
+      upPrice: totalUpYesterday,
+      savePrice: totalUpYesterday - totalDownYesterday,
     },
   };
 
@@ -113,18 +105,6 @@ const HomeActivity = (props: Props) => {
                 <InfoGroup data={trans} />
               </React.Fragment>
             ))}
-            {/* {Object.keys(infoDict).map(item => {
-              return (
-                <React.Fragment key={item}>
-                  <InfoGroup
-                    shortcutName={item}
-                    name={infoDict[item].name}
-                    price={infoDict[item].price}
-                    isIncrease={infoDict[item].isIncrease}
-                  />
-                </React.Fragment>
-              );
-            })} */}
           </Layout>
         </Layout>
         <Layout style={styles.groupContainer}>

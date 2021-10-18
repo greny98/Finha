@@ -4,90 +4,128 @@ import {StyleSheet, View} from 'react-native';
 import VerticalLineChart from '../common/VerticalLineChart';
 import {getDBConnection, getTransactions} from 'db/db-service';
 import moment from 'moment';
+import {calcTotalTrans} from 'utils/utils';
 
 interface Props {}
 
-const chartStatics: any = {
-  Sunday: {
-    redRate: 20,
-    greenRate: 80,
-    name: 'CN',
-  },
-  Money: {
-    redRate: 20,
-    greenRate: 80,
-    name: 'Thứ 2',
-  },
-  Tuesday: {
-    redRate: 30,
-    greenRate: 70,
-    name: 'Thứ 3',
-  },
-  Wednesday: {
-    redRate: 60,
-    greenRate: 40,
-    name: 'Thứ 4',
-  },
-  Thursday: {
-    redRate: 50,
-    greenRate: 50,
-    name: 'Thứ 5',
-  },
-  Friday: {
-    redRate: 40,
-    greenRate: 60,
-    name: 'Thứ 6',
-  },
-  Saturday: {
-    redRate: 20,
-    greenRate: 80,
-    name: 'Thứ 7',
-  },
-};
-
 const LineChartGroup = (props: Props) => {
   const [transaction, setTransaction] = useState<any>({
-    sun: [],
     mon: [],
     tue: [],
     wed: [],
     thu: [],
     fri: [],
     sat: [],
+    sun: [],
   });
+  const [salary, setSalary] = useState(0);
+
   const TODAY = new Date();
 
-  const SUNDAY = moment().startOf('week');
-  const MONDAY = moment().startOf('week').add(1, 'd');
-  const TUESDAY = moment().startOf('week').add(2, 'd');
-  const WEDNESDAY = moment().startOf('week').add(3, 'd');
-  const THURSDAY = moment().startOf('week').add(4, 'd');
-  const FRIDAY = moment().startOf('week').add(5, 'd');
-  const SATURDAY = moment().startOf('week').add(6, 'd');
+  const DAY: any = {
+    MONDAY: moment().startOf('week'),
+    TUESDAY: moment().startOf('week').add(1, 'd'),
+    WEDNESDAY: moment().startOf('week').add(2, 'd'),
+    THURSDAY: moment().startOf('week').add(3, 'd'),
+    FRIDAY: moment().startOf('week').add(4, 'd'),
+    SATURDAY: moment().startOf('week').add(5, 'd'),
+    SUNDAY: moment().startOf('week').add(6, 'd'),
+  };
 
   const getStartDay = (day: any) => {
-    return day.toDate();
+    return day.startOf('d').toDate();
   };
   const getEndDay = (day: any) => {
     return day.endOf('d').toDate();
   };
 
-  console.log('========', getEndDay(SUNDAY));
-
   const loadListTrans = async () => {
     const db = await getDBConnection();
     // get income amount
-    const listSunday = await getTransactions(
+    const incomeThisMonth = await getTransactions(
       db,
-      moment(getStartDay(SUNDAY)).startOf('d').toDate(),
-      moment(getEndDay(SUNDAY)).endOf('d').toDate(),
+      moment(TODAY).startOf('M').toDate(),
+      moment(TODAY).endOf('M').toDate(),
+      {category: 'income'},
     );
-    console.log('🚀 ~ file: LineChartGroup.tsx ~ line 83 ~ loadListTrans ~ listSunday', listSunday);
+    if (incomeThisMonth.length > 0) {
+      setSalary(incomeThisMonth[0].amount);
+    }
+
+    const result = await Promise.all(
+      Object.keys(DAY).map((day: any) => {
+        return getTransactions(db, getStartDay(DAY[day]), getEndDay(DAY[day]));
+      }),
+    );
+    setTransaction({
+      mon: result[0],
+      tue: result[1],
+      wed: result[2],
+      thu: result[3],
+      fri: result[4],
+      sat: result[5],
+      sun: result[6],
+    });
   };
 
   useEffect(() => {
     loadListTrans();
   }, []);
+
+  // Rate Increase Money
+  const calcGreenRate = (trans: any[]) => {
+    if (trans.length > 0) {
+      return (
+        (calcTotalTrans(trans, 1) + salary / (calcTotalTrans(trans, 1) + salary + calcTotalTrans(trans, -1))) * 100
+      );
+    }
+    return 100;
+  };
+  const calcRedRate = (trans: any[]) => {
+    if (trans.length > 0) {
+      return (calcTotalTrans(trans, -1) / (calcTotalTrans(trans, 1) + salary + calcTotalTrans(trans, -1))) * 100;
+    }
+    return 0;
+  };
+
+  const chartStatics: any = {
+    Sunday: {
+      redRate: calcRedRate(transaction.sun),
+      greenRate: calcGreenRate(transaction.sun),
+      name: 'CN',
+    },
+    Money: {
+      redRate: calcRedRate(transaction.mon),
+      greenRate: calcGreenRate(transaction.mon),
+      name: 'Thứ 2',
+    },
+    Tuesday: {
+      redRate: calcRedRate(transaction.tue),
+      greenRate: calcGreenRate(transaction.tue),
+      name: 'Thứ 3',
+    },
+    Wednesday: {
+      redRate: calcRedRate(transaction.wed),
+      greenRate: calcGreenRate(transaction.wed),
+      name: 'Thứ 4',
+    },
+    Thursday: {
+      redRate: calcRedRate(transaction.thu),
+      greenRate: calcGreenRate(transaction.thu),
+      name: 'Thứ 5',
+    },
+    Friday: {
+      redRate: calcRedRate(transaction.fri),
+      greenRate: calcGreenRate(transaction.fri),
+      name: 'Thứ 6',
+    },
+    Saturday: {
+      redRate: calcRedRate(transaction.sat),
+      greenRate: calcGreenRate(transaction.sat),
+      name: 'Thứ 7',
+    },
+  };
+
   return (
     <Layout>
       <Layout style={styles.flexBox}>

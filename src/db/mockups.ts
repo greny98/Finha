@@ -22,7 +22,7 @@ export async function mockups(db: SQLiteDatabase) {
     factor: -1,
     note: 'bay',
     amount: 100000,
-    date: moment(new Date()).endOf('day').subtract(5, 'hour').toDate(),
+    date: moment(new Date()).startOf('day').add(5, 'hour').toDate(),
     walletId: 1,
   });
   await createTransactions(db, {
@@ -34,11 +34,27 @@ export async function mockups(db: SQLiteDatabase) {
     walletId: 1,
   });
   await createTransactions(db, {
+    categoryId: 1,
+    factor: 1,
+    note: 'salary 2',
+    amount: 500000,
+    date: moment(new Date()).endOf('day').subtract(5, 'hour').toDate(),
+    walletId: 1,
+  });
+  await createTransactions(db, {
     categoryId: 5,
     factor: 1,
     note: 'income annual month',
     amount: 5000000,
     date: moment(new Date()).endOf('day').subtract(5, 'hour').toDate(),
+    walletId: 1,
+  });
+  await createTransactions(db, {
+    categoryId: 2,
+    factor: -1,
+    note: 'rent house',
+    amount: 3000000,
+    date: moment().startOf('week').add(6, 'd').toDate(),
     walletId: 1,
   });
   // const trans = await getTransactions(

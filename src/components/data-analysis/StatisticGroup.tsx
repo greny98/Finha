@@ -1,23 +1,25 @@
 import {Layout, Text} from '@ui-kitten/components';
 import React from 'react';
 import {StyleSheet} from 'react-native';
+import {convertCurrencyVN, getCategoryColor, getCategoryName} from 'utils/utils';
 
 interface Props {
-  text:string;
-  price:number;
-  color:string;
+  data: any;
 }
 
 const StatisticGroup = (props: Props) => {
-  const {color, text, price} = props;
+  const {data} = props;
   return (
     <Layout style={styles.root}>
       <Layout style={styles.flexBox}>
-        <Layout style={[styles.iconCircle, {backgroundColor: color}]} />
-        <Text style={{fontSize: 18}}>{text}</Text>
+        <Layout style={[styles.iconCircle, {backgroundColor: getCategoryColor(data.categoryId)}]} />
+        <Text style={{fontSize: 18}}>{getCategoryName(data.category)}</Text>
       </Layout>
       <Layout>
-        <Text style={{fontSize: 18}}>{price}</Text>
+        <Text style={{fontSize: 18, color: data.factor === 1 ? '#00C6BA' : '#FE645A'}}>
+          {data.factor === 1 ? '+' : '-'}
+          {convertCurrencyVN(data.amount)}
+        </Text>
       </Layout>
     </Layout>
   );

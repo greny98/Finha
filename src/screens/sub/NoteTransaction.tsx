@@ -117,14 +117,14 @@ const NoteTransaction = (props: Props) => {
             <Layout>
               <TouchableOpacity onPress={() => setShowFromDate(true)}>
                 <Layout style={[styles.flexContainer, styles.dateContainer]}>
-                  <Text>Từ ngày: </Text>
-                  <Text>{fromDate.toDateString()}</Text>
+                  <Text style={{width: 70}}>Từ ngày</Text>
+                  <Text>: {moment(fromDate).format('DD/MM/YYYY')}</Text>
                 </Layout>
               </TouchableOpacity>
               <TouchableOpacity onPress={() => setShowToDate(true)}>
                 <Layout style={[styles.flexContainer, styles.dateContainer]}>
-                  <Text>Đến ngày: </Text>
-                  <Text>{toDate.toDateString()}</Text>
+                  <Text style={{width: 70}}>Đến ngày</Text>
+                  <Text>: {moment(toDate).format('DD/MM/YYYY')}</Text>
                 </Layout>
               </TouchableOpacity>
             </Layout>
