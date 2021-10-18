@@ -1,32 +1,31 @@
 import React from 'react';
 import {Layout, Text} from '@ui-kitten/components';
 import {StyleSheet} from 'react-native';
+import {convertCurrencyVN, getCategoryColor, getCategoryName} from 'utils/utils';
 
 interface Props {
-  shortcutName: string;
-  name: string;
-  price: number;
-  isIncrease: boolean;
+  data: any;
 }
 
 const InfoGroup = (props: Props) => {
-  const {shortcutName, name, price, isIncrease} = props;
+  const {data} = props;
   return (
     <Layout style={{marginBottom: 8}}>
       <Layout style={styles.flexBox}>
-        <Layout
-          style={[styles.shortCutImage, isIncrease ? {backgroundColor: '#00C6BA'} : {backgroundColor: '#FE645A'}]}>
-          <Text style={styles.textInCircle}>{shortcutName}</Text>
+        <Layout style={[styles.shortCutImage, {backgroundColor: getCategoryColor(data.categoryId)}]}>
+          <Text style={{textTransform: 'uppercase'}}>{data.category.slice(0, 2)}</Text>
         </Layout>
         <Layout style={styles.infoContainer}>
-          <Text style={styles.nameStyle}>{name}</Text>
+          <Text style={styles.nameStyle}>{getCategoryName(data.category)}</Text>
           <Layout style={styles.flexBox}>
-            {isIncrease ? (
-              <Text style={{color: isIncrease ? '#00C6BA' : '#FE645A'}}>+</Text>
+            {data.factor === 1 ? (
+              <Text style={{color: data.factor === 1 ? '#00C6BA' : '#FE645A'}}>+</Text>
             ) : (
-              <Text style={{color: isIncrease ? '#00C6BA' : '#FE645A'}}>-</Text>
+              <Text style={{color: data.factor === 1 ? '#00C6BA' : '#FE645A'}}>-</Text>
             )}
-            <Text style={[styles.priceStyle, {color: isIncrease ? '#00C6BA' : '#FE645A'}]}>{price}</Text>
+            <Text style={[styles.priceStyle, {color: data.factor === 1 ? '#00C6BA' : '#FE645A'}]}>
+              {convertCurrencyVN(data.amount)}
+            </Text>
           </Layout>
         </Layout>
       </Layout>

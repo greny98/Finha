@@ -5,17 +5,33 @@ import IntroStack from 'navigation/IntroStack';
 import TabNav from 'navigation/TabNav';
 import SubStack from 'navigation/SubStack';
 import TargetStack from 'navigation/TargetStack';
+import {getAccessStatus, getDBConnection} from 'db/db-service';
+import {useDispatch} from 'react-redux';
+import {setLocalDb} from 'redux/actions/db.action';
 
 interface Props {}
 
 const Stack = createNativeStackNavigator();
 
 const Root = (props: Props) => {
+  const dispatch = useDispatch();
+
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
   useEffect(() => {
-    navigation.navigate('Tab');
+    const loadDbToRedux = async () => {
+      const db = await getDBConnection();
+      const statusAccess = await getAccessStatus(db);
+      if (statusAccess.length === 0) {
+        navigation.navigate('Intro', {screen: 'IntroOne'});
+      } else {
+        navigation.navigate('Tab', {screen: 'Home'});
+      }
+    };
+    loadDbToRedux();
   }, []);
+
+  useEffect(() => {}, []);
 
   return (
     <Stack.Navigator

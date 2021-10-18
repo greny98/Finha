@@ -17,9 +17,6 @@ const TransactionActivity = (props: Props) => {
     navigation.navigate('Target', {screen: 'SaveMoneyLoading'});
   };
 
-  const navigateIncome = () => {
-    navigation.navigate('Sub', {screen: 'Income'});
-  };
   return (
     <SafeAreaView>
       <ScrollView showsVerticalScrollIndicator={false}>

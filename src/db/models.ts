@@ -19,10 +19,6 @@ export const models: {[key: string]: Column[]} = {
     {name: 'amount', dataType: 'REAL', notNull: true},
     {name: 'note', dataType: 'TEXT', defaultValue: "''"},
   ],
-  personal_income: [
-    {name: 'id', primaryKey: true, dataType: 'INTEGER', notNull: true},
-    {name: 'total', dataType: 'REAL', notNull: true},
-  ],
   access_status: [
     {name: 'id', primaryKey: true, dataType: 'INTEGER', notNull: true},
     {name: 'active', dataType: 'INTEGER', defaultValue: 1},

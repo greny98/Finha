@@ -2,6 +2,7 @@ import React from 'react';
 import {Layout, Text} from '@ui-kitten/components';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
+import {convertCurrencyVN} from 'utils/utils';
 
 interface Props {}
 
@@ -22,11 +23,11 @@ const CardInfo = (props: any) => {
   return (
     <Layout style={styles.cardContainer}>
       <Layout>
+        <Text style={{fontSize: 20}}>{day}</Text>
         <Layout style={[styles.flexBox, {justifyContent: 'space-between'}]}>
-          <Text>{day}</Text>
-          <Layout style={styles.flexBox}>
-            <Text style={styles.textDecrease}>-{downPrice}</Text>
-            <Text style={styles.textIncrease}>+{upPrice}</Text>
+          <Layout style={[styles.flexBox, {width: '100%', justifyContent: 'space-between'}]}>
+            <Text style={styles.textDecrease}>-{convertCurrencyVN(downPrice)}</Text>
+            <Text style={styles.textIncrease}>+{convertCurrencyVN(upPrice)}</Text>
           </Layout>
         </Layout>
         <Layout style={[styles.flexBox, {marginTop: 16}]}>
@@ -47,7 +48,7 @@ const CardInfo = (props: any) => {
       <Layout style={[styles.flexBox, {justifyContent: 'space-between'}]}>
         <Layout>
           <Text>Số tiền tiết kiệm</Text>
-          <Text>{savePrice}</Text>
+          <Text>{convertCurrencyVN(Math.round(savePrice))}</Text>
         </Layout>
         <Layout>
           <TouchableOpacity style={styles.btnStyle} onPress={navigateCreatExpense}>
@@ -61,7 +62,7 @@ const CardInfo = (props: any) => {
 
 const styles = StyleSheet.create({
   cardContainer: {
-    width: 280,
+    width: 300,
     height: 180,
     borderRadius: 20,
     padding: 20,
@@ -70,7 +71,6 @@ const styles = StyleSheet.create({
     marginRight: 20,
   },
   flexBox: {
-    display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
   },

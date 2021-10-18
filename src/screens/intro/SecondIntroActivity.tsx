@@ -3,6 +3,7 @@ import React from 'react';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import CustomModal from 'components/common/CustomModal';
 import {useNavigation, NavigationProp, ParamListBase} from '@react-navigation/native';
+import { createAccessStatus, getDBConnection } from 'db/db-service';
 
 interface Props {}
 
@@ -11,9 +12,11 @@ const SecondIntroActivity = (props: Props) => {
 
   const BackIcon = (props: any) => <Icon {...props} name="arrow-back" />;
 
-  const renderBackAction = () => <TopNavigationAction icon={BackIcon} onPress={()=> navigation.goBack()} />;
+  const renderBackAction = () => <TopNavigationAction icon={BackIcon} onPress={() => navigation.goBack()} />;
 
-  const navigateHomePage = () => {
+  const navigateHomePage = async () => {
+    const db = await getDBConnection();
+    await createAccessStatus(db);
     navigation.navigate('Tab', {screen: 'Home'});
   };
 

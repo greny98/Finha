@@ -1,15 +1,19 @@
-import {Icon, Layout, Text, TopNavigation} from '@ui-kitten/components';
+import {Layout, Text, TopNavigation} from '@ui-kitten/components';
 import React from 'react';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import CustomModal from 'components/common/CustomModal';
 import {useNavigation, NavigationProp, ParamListBase} from '@react-navigation/native';
+import {createAccessStatus, getDBConnection} from 'db/db-service';
 
 interface Props {}
 
 const FirstIntroActivity = (props: Props) => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
-  const navigateHome = () => {
+  const navigateHome = async () => {
+    const db = await getDBConnection();
+    await createAccessStatus(db);
+
     navigation.navigate('Tab', {screen: 'DataAnalysis'});
   };
 

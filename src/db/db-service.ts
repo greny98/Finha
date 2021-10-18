@@ -126,7 +126,7 @@ export const getTransactions = async (db: SQLiteDatabase, start: Date, end: Date
   if (Object.keys(filters).length > 0) {
     where = 'WHERE ';
     Object.entries(filters).forEach(([field, value]) => {
-      console.log('====== field, value', field, value)
+      console.log('====== field, value', field, value);
       let editedValue = value;
       if (typeof value == 'string') {
         editedValue = `'${value}'`;
@@ -145,7 +145,7 @@ export const getTransactions = async (db: SQLiteDatabase, start: Date, end: Date
         ON trans_with_cate.walletId = wallets.id 
     ${where};
   `;
-  console.log('=====\n', query)
+  console.log('=====\n', query);
   const results = await db.executeSql(query);
   return postHandler<GetTransactionResult>(results);
 };
@@ -157,15 +157,41 @@ export interface ICategory {
   name: string;
   color: string;
 }
-export const createCategories = async (db: SQLiteDatabase, categoryInfo: ICategory) => {
-  const {name, color} = categoryInfo;
-  const query = `
+export const createCategories = async (db: SQLiteDatabase) => {
+  const categoryInfo = [
+    {
+      name: 'market',
+      color: '#00C689',
+    },
+    {
+      name: 'living',
+      color: '#FE645A',
+    },
+    {
+      name: 'rent',
+      color: '#2A327D',
+    },
+    {
+      name: 'payment',
+      color: '#FFB039',
+    },
+    {
+      name: 'income',
+      color: '#cecece',
+    },
+  ];
+
+  const results = await Promise.all(
+    categoryInfo.map(category => {
+      const query = `
     INSERT INTO categories (name, color)
-    VALUES('${name}', '${color}');
+    VALUES('${category.name}','${category.color}');
   `;
-  console.log('======\n', query);
-  const results = await db.executeSql(query);
-  return postHandler(results);
+      return db.executeSql(query);
+    }),
+  );
+  // console.log('🚀 ~ file: db-service.ts ~ line 189 ~ createCategories ~ results', results);
+  return results.map(r => postHandler(r));
 };
 
 export const getAllCategories = async (db: SQLiteDatabase) => {

@@ -1,43 +1,14 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {Layout, Text} from '@ui-kitten/components';
 import {StyleSheet, Image, SafeAreaView, ScrollView, TouchableOpacity} from 'react-native';
 import CardInfo from 'components/home/CardInfo';
 import InfoGroup from 'components/home/InfoGroup';
 import LineChartGroup from 'components/home/LineChartGroup';
 import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
+import {getDBConnection, getTransactions} from 'db/db-service';
+import moment from 'moment';
 
 interface Props {}
-
-const infoDict: any = {
-  MS: {
-    name: 'Đi chợ/Siêu thị',
-    price: 300000,
-    isIncrease: false,
-  },
-  AB: {
-    name: 'Vay mượn',
-    price: 300000,
-    isIncrease: true,
-  },
-  BM: {
-    name: 'Tiền lì xì',
-    price: 300000,
-    isIncrease: true,
-  },
-};
-
-const cardDict: any = {
-  'Hôm nay': {
-    downPrice: 3000,
-    upPrice: 5000,
-    savePrice: 2000,
-  },
-  'Hôm qua': {
-    downPrice: 3000,
-    upPrice: 5000,
-    savePrice: 2000,
-  },
-};
 
 const HomeActivity = (props: Props) => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
@@ -45,6 +16,70 @@ const HomeActivity = (props: Props) => {
   const navigateNoteTransaction = () => {
     navigation.navigate('Sub', {screen: 'NoteTransaction'});
   };
+  const TODAY = new Date();
+  const YESTERDAY = moment(TODAY).subtract(1, 'd').toDate();
+
+  // STATE
+  const [transToday, setTransToday] = useState<any>([]);
+  const [transYesterday, setTransYesterday] = useState<any>([]);
+
+  const [salary, setSalary] = useState(0);
+
+  // FUNCTION
+  const loadListTrans = async () => {
+    const db = await getDBConnection();
+    // get income amount
+    const incomeThisMonth = await getTransactions(
+      db,
+      moment(TODAY).startOf('M').toDate(),
+      moment(TODAY).endOf('M').toDate(),
+      {category: 'income'},
+    );
+    if (incomeThisMonth.length > 0) {
+      setSalary(incomeThisMonth[0].amount);
+    }
+    const listToday = await getTransactions(db, moment(TODAY).startOf('d').toDate(), moment(TODAY).endOf('d').toDate());
+    const listYesterDay = await getTransactions(
+      db,
+      moment(YESTERDAY).startOf('d').toDate(),
+      moment(YESTERDAY).endOf('d').toDate(),
+    );
+
+    setTransToday(listToday);
+    setTransYesterday(listYesterDay);
+  };
+
+  const totalUpEachDay = Math.round(salary / 30);
+  const totalDownToday =
+    transToday.length > 0
+      ? transToday
+          .filter((trans: any) => trans.factor === -1)
+          .reduce((total: number, item: any) => (total += item.amount), 0)
+      : 0;
+  const totalDownYesterday =
+    transYesterday.length > 0
+      ? transYesterday
+          .filter((trans: any) => trans.factor === -1)
+          .reduce((total: number, item: any) => (total += item.amount), 0)
+      : 0;
+
+  const cardDict: any = {
+    'Hôm nay': {
+      downPrice: totalDownToday,
+      upPrice: totalUpEachDay,
+      savePrice: totalUpEachDay - totalDownToday,
+    },
+    'Hôm qua': {
+      downPrice: totalDownYesterday,
+      upPrice: totalUpEachDay,
+      savePrice: totalUpEachDay - totalDownYesterday,
+    },
+  };
+
+  useEffect(() => {
+    loadListTrans();
+  }, []);
+
   return (
     <SafeAreaView>
       <ScrollView showsVerticalScrollIndicator={false}>
@@ -69,11 +104,16 @@ const HomeActivity = (props: Props) => {
           <Layout style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
             <Text style={styles.titleStyle}>Các khoản thu chi hôm nay</Text>
             <TouchableOpacity onPress={navigateNoteTransaction}>
-              <Text style={{color: 'blue', fontSize: 18}}>Xem thêm</Text>
+              <Text style={{color: '#00C689', fontSize: 18}}>Xem thêm</Text>
             </TouchableOpacity>
           </Layout>
           <Layout style={styles.infoGroupContainer}>
-            {Object.keys(infoDict).map(item => {
+            {transToday.map((trans: any, index: number) => (
+              <React.Fragment key={`${trans.id}+${index}`}>
+                <InfoGroup data={trans} />
+              </React.Fragment>
+            ))}
+            {/* {Object.keys(infoDict).map(item => {
               return (
                 <React.Fragment key={item}>
                   <InfoGroup
@@ -84,7 +124,7 @@ const HomeActivity = (props: Props) => {
                   />
                 </React.Fragment>
               );
-            })}
+            })} */}
           </Layout>
         </Layout>
         <Layout style={styles.groupContainer}>
