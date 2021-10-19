@@ -6,6 +6,7 @@ import Root from 'Root';
 import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {
   createCategories,
+  createProfile,
   createTable,
   createTransactions,
   createWallets,
@@ -45,6 +46,7 @@ const App = () => {
       if (wallets.length === 0) {
         await createWallets(db);
       }
+      await createProfile(db);
       await mockups(db);
     };
     loadDb();

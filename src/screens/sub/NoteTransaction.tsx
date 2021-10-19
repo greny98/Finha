@@ -1,3 +1,6 @@
+/*
+  TODO: Khi tạo chi, kiểm tra số tiền hiện có và số tiền cần tiết kiệm để cảnh báo
+ */
 import {Icon, Layout, Text} from '@ui-kitten/components';
 import React, {useEffect, useState} from 'react';
 import {Platform, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';

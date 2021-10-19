@@ -26,7 +26,12 @@ export const models: {[key: string]: Column[]} = {
   save_money: [
     {name: 'id', primaryKey: true, dataType: 'INTEGER', notNull: true},
     {name: 'amount', dataType: 'REAL', defaultValue: 0},
-    {name: 'target', dataType: 'TEXT', notNull: true},
+    {name: 'description', dataType: 'TEXT', notNull: true},
     {name: 'fromDate', dataType: 'TEXT', notNull: true},
+    {name: 'endDate', dataType: 'TEXT', notNull: true},
+  ],
+  profile: [
+    {name: 'id', primaryKey: true, dataType: 'INTEGER', notNull: true},
+    {name: 'amount', dataType: 'REAL', defaultValue: 0},
   ],
 };

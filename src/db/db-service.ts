@@ -91,6 +91,39 @@ export const getWallets = async (db: SQLiteDatabase) => {
   return postHandler<Wallet>(results);
 };
 
+// ------------------------------- Profile ---------------------------------------
+export interface Profile {
+  id?: number;
+  amount: number;
+}
+
+export const createProfile = async (db: SQLiteDatabase) => {
+  const query = `INSERT INTO profile (amount) VALUES(0);`;
+  return db.executeSql(query);
+};
+
+const getProfile = async (db: SQLiteDatabase) => {
+  const query = `
+    SELECT * FROM profile;
+  `;
+  console.log('======\n', query);
+  const results = await db.executeSql(query);
+  return postHandler<Profile>(results);
+};
+
+const updateProfile = async (db: SQLiteDatabase, exchangeAmount: number) => {
+  const profile = await getProfile(db);
+  const query = `
+    UPDATE profile
+    SET amount = ${profile[0].amount + exchangeAmount}
+    WHERE
+      id = ${profile[0].id} ;
+  `;
+  console.log('======\n', query);
+  const results = await db.executeSql(query);
+  return postHandler(results);
+};
+
 // ------------------------------- Transactions Query ---------------------------------------
 
 export interface Transaction {
@@ -105,6 +138,8 @@ export interface Transaction {
 
 export const createTransactions = async (db: SQLiteDatabase, transaction: Transaction) => {
   const {categoryId, walletId, factor, date, amount, note} = transaction;
+  const exchangeAmount = amount * factor;
+  await updateProfile(db, exchangeAmount);
   const query = `
       INSERT INTO transactions (categoryId, walletId, factor, date, amount, note) 
       VALUES(${categoryId}, ${walletId}, ${factor}, '${moment(date).format(
@@ -119,9 +154,14 @@ export interface GetTransactionResult extends Transaction {
   wallet: string;
 }
 
-export const getTransactions = async (db: SQLiteDatabase, start: Date, end: Date, filters = {}) => {
-  const startStr = moment(start).format('YYYY-MM-DD HH:mm:SS.SSS');
-  const endStr = moment(end).format('YYYY-MM-DD HH:mm:SS.SSS');
+export const getTransactions = async (db: SQLiteDatabase, filters: any) => {
+  let whereDate = '';
+  if (filters.startDate && filters.endDate) {
+    const startStr = moment(filters.startDate).format('YYYY-MM-DD HH:mm:SS.SSS');
+    const endStr = moment(filters.endDate).format('YYYY-MM-DD HH:mm:SS.SSS');
+    whereDate = `WHERE date BETWEEN '${startStr}' AND '${endStr}'`;
+  }
+
   let where = '';
   if (Object.keys(filters).length > 0) {
     where = 'WHERE ';
@@ -136,7 +176,7 @@ export const getTransactions = async (db: SQLiteDatabase, start: Date, end: Date
   const query = `
     SELECT * FROM
         (SELECT * FROM
-            (SELECT * FROM transactions WHERE date BETWEEN '${startStr}' AND '${endStr}') AS trans
+            (SELECT * FROM transactions ${whereDate}) AS trans
               LEFT JOIN 
               (SELECT name as category, id as cateId FROM categories) as categories 
               ON trans.categoryId = categories.cateId) as trans_with_cate
@@ -154,6 +194,13 @@ export const updateTransaction = async (db: SQLiteDatabase, trans: Transaction) 
   let setCols = 'SET ';
   const entries = Object.entries(trans);
   const nFields = entries.length;
+
+  const foundTrans = await getTransactions(db, {id: trans.id});
+  if (foundTrans.length) {
+    const exchange = trans.factor * trans.amount - foundTrans[0].amount * foundTrans[0].factor;
+    await updateProfile(db, exchange);
+  }
+
   entries.map(([field, value], idx) => {
     if (field !== 'id') {
       let edited = value;
@@ -167,10 +214,10 @@ export const updateTransaction = async (db: SQLiteDatabase, trans: Transaction) 
     }
   });
   const query = `
-  UPDATE transactions
-  ${setCols}
-  WHERE
-    id = ${trans.id} ;
+    UPDATE transactions
+    ${setCols}
+    WHERE
+      id = ${trans.id} ;
   `;
   const results = await db.executeSql(query);
   return postHandler<GetTransactionResult>(results);
@@ -257,14 +304,16 @@ export interface SaveMoney {
   id?: number;
   amount: number;
   target: string;
-  fromDate: Date;
+  fromDate?: Date | string;
+  endDate?: Date | string;
 }
 
 export const createSaveMoney = async (db: SQLiteDatabase, info: SaveMoney) => {
-  const fromDate = moment(info.fromDate).format('YYYY-MM-DD HH:mm:SS.SSS');
+  const fromDate = moment(new Date()).format('YYYY-MM-DD HH:mm:SS.SSS');
+  const endDate = moment(new Date()).endOf('month').format('YYYY-MM-DD HH:mm:SS.SSS');
   const query = `
-    INSERT INTO save_money (amount, target, fromDate)
-    VALUES(${info.amount}, '${info.target}', '${fromDate}');
+    INSERT INTO save_money (amount, target, fromDate, endDate)
+    VALUES(${info.amount}, '${info.target}', '${fromDate}', '${endDate}');
   `;
   console.log('======\n', query);
   const results = await db.executeSql(query);
