@@ -113,6 +113,11 @@ const NoteTransaction = (props: Props) => {
           />
         )}
         <Layout style={styles.root}>
+          <Layout style={styles.backWrapper}>
+            <TouchableOpacity onPress={navigateHome}>
+              <Text style={{fontSize: 18}}>Quay lại</Text>
+            </TouchableOpacity>
+          </Layout>
           <Layout style={[styles.itemContainer, {padding: 10, alignItems: 'center'}]}>
             <Layout>
               <TouchableOpacity onPress={() => setShowFromDate(true)}>
@@ -141,11 +146,6 @@ const NoteTransaction = (props: Props) => {
             </Layout>
           ))}
           {listTrans.length === 0 && <Text style={styles.contentStyle}>Không có giao dịch nào được tìm thấy</Text>}
-          <TouchableOpacity onPress={navigateHome}>
-            <Layout style={[styles.btnTwoStyle]}>
-              <Text style={{color: '#fff', fontSize: 18}}>Quay lại</Text>
-            </Layout>
-          </TouchableOpacity>
         </Layout>
       </ScrollView>
     </SafeAreaView>
@@ -155,10 +155,17 @@ const NoteTransaction = (props: Props) => {
 const styles = StyleSheet.create({
   root: {
     alignItems: 'center',
-    marginTop: 20,
+    // marginTop: 20,
+  },
+  backWrapper: {
+    width: '100%',
+    justifyContent: 'center',
+    // alignItems: 'center',
+    height: 50,
+    paddingLeft: 16,
   },
   btnTwoStyle: {
-    backgroundColor: '#00C6C6',
+    // backgroundColor: '#00C6C6',
     borderRadius: 30,
     margin: 30,
     alignItems: 'center',

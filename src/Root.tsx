@@ -22,9 +22,9 @@ const Root = (props: Props) => {
       const db = await getDBConnection();
       const statusAccess = await getAccessStatus(db);
       if (statusAccess.length === 0) {
-        navigation.navigate('Intro', {screen: 'IntroOne'});
+        navigation.navigate<any>('Intro', {screen: 'IntroOne'});
       } else {
-        navigation.navigate('Tab', {screen: 'Home'});
+        navigation.navigate<any>('Tab', {screen: 'Home'});
       }
     };
     loadDbToRedux();
