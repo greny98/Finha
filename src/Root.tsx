@@ -7,7 +7,6 @@ import SubStack from 'navigation/SubStack';
 import TargetStack from 'navigation/TargetStack';
 import {getAccessStatus, getDBConnection} from 'db/db-service';
 import {useDispatch} from 'react-redux';
-import {setLocalDb} from 'redux/actions/db.action';
 
 interface Props {}
 

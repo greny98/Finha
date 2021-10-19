@@ -150,6 +150,30 @@ export const getTransactions = async (db: SQLiteDatabase, start: Date, end: Date
   return postHandler<GetTransactionResult>(results);
 };
 
+export const updateTransaction = async (db: SQLiteDatabase, trans: Transaction) => {
+  let setCols = 'SET ';
+  const entries = Object.entries(trans);
+  const nFields = entries.length;
+  entries.map(([field, value], idx) => {
+    if (field !== 'id') {
+      let edited = value;
+      if (typeof value == 'string') {
+        edited = `'${value}'`;
+      }
+      setCols += `${field} = ${edited}`;
+      if (idx < nFields - 1) edited += ',';
+    }
+  });
+  const query = `
+  UPDATE table
+  ${setCols}
+  WHERE
+    id = ${trans.id} ;
+  `;
+  const results = await db.executeSql(query);
+  return postHandler<GetTransactionResult>(results);
+};
+
 // ------------------------------- Categories Query ---------------------------------------
 
 export interface ICategory {
@@ -221,6 +245,35 @@ export const createAccessStatus = async (db: SQLiteDatabase) => {
 
 export const getAccessStatus = async (db: SQLiteDatabase) => {
   const query = `SELECT * FROM access_status;`;
+  console.log('======\n', query);
+  const results = await db.executeSql(query);
+  return postHandler(results);
+};
+
+// ------------------------------- Save Money ---------------------------------------
+export interface SaveMoney {
+  id?: number;
+  amount: number;
+  target: string;
+  fromDate: Date;
+}
+
+export const createSaveMoney = async (db: SQLiteDatabase, info: SaveMoney) => {
+  const fromDate = moment(info.fromDate).format('YYYY-MM-DD HH:mm:SS.SSS');
+  const query = `
+    INSERT INTO save_money (amount, target, fromDate)
+    VALUES(${info.amount}, '${info.target}', '${fromDate}');
+  `;
+  console.log('======\n', query);
+  const results = await db.executeSql(query);
+  return postHandler(results);
+};
+
+export const getSaveMoney = async (db: SQLiteDatabase) => {
+  const current = new Date();
+  const startStr = moment(current).startOf('month').format('YYYY-MM-DD HH:mm:SS.SSS');
+  const endStr = moment(current).endOf('month').format('YYYY-MM-DD HH:mm:SS.SSS');
+  const query = `SELECT * FROM access_status BETWEEN '${startStr}' AND '${endStr}');`;
   console.log('======\n', query);
   const results = await db.executeSql(query);
   return postHandler(results);
