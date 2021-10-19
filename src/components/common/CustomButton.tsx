@@ -5,12 +5,13 @@ import {StyleSheet, TouchableHighlight} from 'react-native';
 interface Props {
   title: string;
   onPress: () => void;
+  disabled?: boolean;
 }
 
 const CustomButton = (props: Props) => {
-  const {title, onPress} = props;
+  const {title, onPress, disabled} = props;
   return (
-    <TouchableHighlight style={styles.btnStyle} underlayColor="#008a81" onPress={onPress}>
+    <TouchableHighlight style={styles.btnStyle} underlayColor="#008a81" onPress={onPress} disabled={disabled}>
       <Text style={{color: '#fff'}}>{title}</Text>
     </TouchableHighlight>
   );

@@ -81,11 +81,10 @@ const NoteTransaction = (props: Props) => {
 
   const loadListTrans = async () => {
     const db = await getDBConnection();
-    const transList = await getTransactions(
-      db,
-      moment(fromDate).startOf('d').toDate(),
-      moment(toDate).endOf('d').toDate(),
-    );
+    const transList = await getTransactions(db, {
+      startDate: moment(fromDate).startOf('d').toDate(),
+      endDate: moment(toDate).endOf('d').toDate(),
+    });
     setListTrans(transList);
   };
   useEffect(() => {

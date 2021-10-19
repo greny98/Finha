@@ -36,21 +36,22 @@ const HomeActivity = (props: Props) => {
   const loadListTrans = async () => {
     const db = await getDBConnection();
     // get income amount
-    const incomeThisMonth = await getTransactions(
-      db,
-      moment(TODAY).startOf('M').toDate(),
-      moment(TODAY).endOf('M').toDate(),
-      {category: 'income'},
-    );
+    const incomeThisMonth = await getTransactions(db, {
+      startDate: moment(TODAY).startOf('M').toDate(),
+      endDate: moment(TODAY).endOf('M').toDate(),
+      category: 'income',
+    });
     if (incomeThisMonth.length > 0) {
       setSalary(incomeThisMonth[0].amount);
     }
-    const listToday = await getTransactions(db, moment(TODAY).startOf('d').toDate(), moment(TODAY).endOf('d').toDate());
-    const listYesterDay = await getTransactions(
-      db,
-      moment(YESTERDAY).startOf('d').toDate(),
-      moment(YESTERDAY).endOf('d').toDate(),
-    );
+    const listToday = await getTransactions(db, {
+      startDate: moment(TODAY).startOf('d').toDate(),
+      endDate: moment(TODAY).endOf('d').toDate(),
+    });
+    const listYesterDay = await getTransactions(db, {
+      startDate: moment(YESTERDAY).startOf('d').toDate(),
+      endDate: moment(YESTERDAY).endOf('d').toDate(),
+    });
 
     const combinedList = Object.values(
       listToday.reduce((obj: any, item: any) => {
@@ -143,7 +144,7 @@ const HomeActivity = (props: Props) => {
             <Text style={styles.titleStyle}>Báo cáo tuần</Text>
           </Layout>
           <Layout style={styles.infoGroupContainer}>
-            <LineChartGroup />
+            <LineChartGroup refreshing={refreshing}/>
           </Layout>
         </Layout>
       </ScrollView>

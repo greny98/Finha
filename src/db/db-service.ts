@@ -102,7 +102,7 @@ export const createProfile = async (db: SQLiteDatabase) => {
   return db.executeSql(query);
 };
 
-const getProfile = async (db: SQLiteDatabase) => {
+export const getProfile = async (db: SQLiteDatabase) => {
   const query = `
     SELECT * FROM profile;
   `;
@@ -111,7 +111,7 @@ const getProfile = async (db: SQLiteDatabase) => {
   return postHandler<Profile>(results);
 };
 
-const updateProfile = async (db: SQLiteDatabase, exchangeAmount: number) => {
+export const updateProfile = async (db: SQLiteDatabase, exchangeAmount: number) => {
   const profile = await getProfile(db);
   const query = `
     UPDATE profile
@@ -172,11 +172,13 @@ export const getTransactions = async (db: SQLiteDatabase, filters: any) => {
   if (Object.keys(filters).length > 0 && haveWhere) {
     where = 'WHERE ';
     Object.entries(filters).forEach(([field, value]) => {
-      let editedValue = value;
-      if (typeof value == 'string') {
-        editedValue = `'${value}'`;
+      if (field !== 'startDate' && field !== 'endDate') {
+        let editedValue = value;
+        if (typeof value == 'string') {
+          editedValue = `'${value}'`;
+        }
+        where += `${field} = ${editedValue} `;
       }
-      where += `${field} = ${editedValue} `;
     });
   }
   const query = `

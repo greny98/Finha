@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Layout, Text} from '@ui-kitten/components';
-import {StyleSheet, View, SafeAreaView, ScrollView, Dimensions} from 'react-native';
+import {StyleSheet, View, SafeAreaView, ScrollView, Dimensions, RefreshControl} from 'react-native';
 import ButtonGroupA from 'components/data-analysis/ButtonGroupA';
 import ButtonGroupB from 'components/data-analysis/ButtonGroupB';
 import StatisticGroup from 'components/data-analysis/StatisticGroup';
@@ -11,11 +11,9 @@ import {getCategoryColor} from 'utils/utils';
 
 interface Props {}
 
-interface IInfoDict {
-  color: string;
-  price: number;
-  name: string;
-}
+const wait = (timeout: any) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
 
 const DataAnalysisActivity = (props: Props) => {
   const {width, height} = Dimensions.get('screen');
@@ -24,6 +22,7 @@ const DataAnalysisActivity = (props: Props) => {
   const [transType, setTransType] = useState(0);
   const [filterTime, setFilterTime] = useState(2);
   const [transList, setTransList] = useState<any>([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   // CREATE Var  Date
   const START_WEEK = moment().startOf('week').toDate();
@@ -39,11 +38,20 @@ const DataAnalysisActivity = (props: Props) => {
     const db = await getDBConnection();
     let resultList;
     if (filterType === 0) {
-      resultList = await getTransactions(db, START_WEEK, END_WEEK);
+      resultList = await getTransactions(db, {
+        startDate: START_WEEK,
+        endDate: END_WEEK,
+      });
     } else if (filterType === 1) {
-      resultList = await getTransactions(db, START_MONTH, END_MONTH);
+      resultList = await getTransactions(db, {
+        startDate: START_MONTH,
+        endDate: END_MONTH,
+      });
     } else {
-      resultList = await getTransactions(db, START_YEAR, END_YEAR);
+      resultList = await getTransactions(db, {
+        startDate: START_YEAR,
+        endDate: END_YEAR,
+      });
     }
 
     const combinedList = Object.values(
@@ -64,12 +72,20 @@ const DataAnalysisActivity = (props: Props) => {
     setTransList(combinedList);
   };
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => {
+      setRefreshing(false);
+      loadTransaction(filterTime);
+    });
+  }, []);
+
   useEffect(() => {
     loadTransaction(filterTime);
   }, [filterTime]);
 
   // Logic Data
-  
+
   const countPercentage = (amount: number, totalAmount: number) => Math.round((amount / totalAmount) * 100);
   const getAmountAndColor = (trans: any, factor: number) => {
     return [
@@ -98,7 +114,10 @@ const DataAnalysisActivity = (props: Props) => {
 
   return (
     <SafeAreaView>
-      <ScrollView style={{}} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={{}}
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         <Layout style={styles.btnGroup}>
           <ButtonGroupA title="Thu" active={transType === 0} onPress={() => setTransType(0)} />
           <ButtonGroupA title="Chi" active={transType === 1} onPress={() => setTransType(1)} />
@@ -121,21 +140,6 @@ const DataAnalysisActivity = (props: Props) => {
               innerRadius={80}
               labelRadius={110}
               style={{labels: {fontSize: 18, fill: 'white'}}}
-              //   events={[{
-              //     target: "data",
-              //     eventHandlers: {
-              //         onPress: () => {
-              //           return[
-              //             {
-              //               target: "data",
-              //               mutation: ({ style }) => {
-              //                 return style.fill === "#c43a31" ? null : { style: { fill: "#c43a31" } };
-              //               }
-              //             }
-              //           ]
-              //         }
-              //     }
-              // }]}
             />
             <Layout
               style={{

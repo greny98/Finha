@@ -9,6 +9,9 @@ interface Props {
 
 const VerticalLineChart = (props: Props) => {
   const {redRate, greenRate, day} = props;
+  if (day === 'Thứ 3') {
+    console.log(redRate, greenRate);
+  }
   return (
     <Layout>
       <Layout style={styles.lineContainer}>

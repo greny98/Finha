@@ -4,15 +4,15 @@ import {StyleSheet, TouchableOpacity} from 'react-native';
 import CustomButton from 'components/common/CustomButton';
 import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
 import {convertCurrencyVN} from 'utils/utils';
-import {useDispatch, useSelector} from 'react-redux';
 import moment from 'moment';
-import {getAllCategories, getDBConnection, getTransactions} from 'db/db-service';
+import {getDBConnection, getProfile, getTransactions, Transaction, updateTransaction} from 'db/db-service';
 
 interface Props {}
 
 const Profile = (props: Props) => {
-  const [price, setPrice] = useState(0);
-  const [input, setInput] = useState('');
+  const [income, setIncome] = useState<Transaction>({} as Transaction);
+  const [total, setTotal] = useState(0);
+  const [input, setInput] = useState(0);
   const [showModal, setShowModal] = useState(false);
 
   const START_MONTH = moment(new Date()).startOf('M').toDate();
@@ -21,22 +21,35 @@ const Profile = (props: Props) => {
   //Navigation
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
-  const navigateConfirmIncome = () => {
-    setShowModal(false);
-  };
-
   const loadIncome = async () => {
     const db = await getDBConnection();
-    const resultIncome = await getTransactions(db, START_MONTH, END_MONTH, {
+    const resultIncome = await getTransactions(db, {
+      startDate: START_MONTH,
+      endDate: END_MONTH,
       category: 'income',
     });
     if (resultIncome.length > 0) {
-      setPrice(resultIncome[0].amount);
+      setIncome(resultIncome[0]);
+    }
+    const result = await getProfile(db);
+    if (result.length > 0) {
+      setTotal(result[0].amount);
     }
   };
 
   const setNewIncome = async () => {
-    // TODO: Edit or Create New Income
+    const db = await getDBConnection();
+    const updateIncome = {
+      id: income.id,
+      categoryId: income.categoryId,
+      factor: income.factor,
+      note: income.note,
+      amount: input,
+      walletId: income.walletId,
+    };
+    await updateTransaction(db, updateIncome);
+    loadIncome();
+    setShowModal(false);
   };
 
   useEffect(() => {
@@ -47,21 +60,27 @@ const Profile = (props: Props) => {
     <Layout style={styles.root}>
       <Layout style={{alignItems: 'center'}}>
         <Layout style={[styles.boxContainer, {padding: 12, marginBottom: 20}]}>
-          {price !== 0 ? (
+          {total !== 0 ? (
             <>
-              <Text style={styles.textStyle}>Tổng thu nhập tháng hiện tại: </Text>
-              <Text style={{fontSize: 24, fontWeight: 'bold'}}>{convertCurrencyVN(price)}</Text>
+              <Text style={styles.textStyle}>Tổng số tiền hiện tại: </Text>
+              <Text style={{fontSize: 24, fontWeight: 'bold', color: total > 0 ? '#00C6BA' : '#FE645A'}}>
+                {convertCurrencyVN(total)}
+              </Text>
+              <Text style={styles.textStyle}>Thu nhập hiện tại: </Text>
+              <Text style={{fontSize: 24, fontWeight: 'bold'}}>{convertCurrencyVN(income.amount)}</Text>
             </>
           ) : (
             <Text style={[styles.textStyle, {textAlign: 'center'}]}>
-              Bạn chưa thiết lập thu nhập. Xin hãy thiết lập thu nhập của mình
+              Bạn chưa thiết lập thu chi. Xin hãy thiết lập thu chi của mình
             </Text>
           )}
         </Layout>
         <Layout>
           <TouchableOpacity onPress={() => setShowModal(true)}>
             <Layout style={[styles.btnStyle]}>
-              <Text style={{color: '#fff'}}>{price === 0 ? 'Thiết lập thu nhập' : 'Thay đổi thu nhập'}</Text>
+              <Text style={{color: '#fff'}}>
+                {Object.keys(income).length > 0 ? 'Thay đổi thu nhập' : 'Thiết lập thu nhập'}
+              </Text>
             </Layout>
           </TouchableOpacity>
         </Layout>
@@ -71,7 +90,11 @@ const Profile = (props: Props) => {
         <Layout style={[styles.boxContainer, styles.modalContainer]}>
           <Text style={styles.textStyle}>Tổng thu nhập tháng của bạn</Text>
           <Layout style={[styles.boxContainer, {flexDirection: 'row'}]}>
-            <Input onChangeText={nextValue => setInput(nextValue)} style={styles.inputStyle} />
+            <Input
+              keyboardType="numeric"
+              onChangeText={nextValue => setInput(Number(nextValue))}
+              style={styles.inputStyle}
+            />
             <Text style={styles.textStyle}>VND</Text>
           </Layout>
           <Layout style={{flexDirection: 'row', justifyContent: 'space-between'}}>
@@ -80,7 +103,7 @@ const Profile = (props: Props) => {
                 <Text style={{color: '#fff'}}>Hủy</Text>
               </Layout>
             </TouchableOpacity>
-            <CustomButton title="Xác nhận" onPress={navigateConfirmIncome} />
+            <CustomButton title="Xác nhận" onPress={setNewIncome} disabled={input === 0} />
           </Layout>
         </Layout>
       </Modal>

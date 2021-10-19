@@ -6,9 +6,12 @@ import {getDBConnection, getTransactions} from 'db/db-service';
 import moment from 'moment';
 import {calcTotalTrans} from 'utils/utils';
 
-interface Props {}
+interface Props {
+  refreshing: boolean;
+}
 
 const LineChartGroup = (props: Props) => {
+  const {refreshing} = props;
   const [transaction, setTransaction] = useState<any>({
     mon: [],
     tue: [],
@@ -18,6 +21,7 @@ const LineChartGroup = (props: Props) => {
     sat: [],
     sun: [],
   });
+  console.log('🚀 ~ file: LineChartGroup.tsx ~ line 16 ~ LineChartGroup ~ transaction', transaction);
   const [salary, setSalary] = useState(0);
 
   const TODAY = new Date();
@@ -31,31 +35,32 @@ const LineChartGroup = (props: Props) => {
     SATURDAY: moment().startOf('week').add(6, 'd'),
     SUNDAY: moment().startOf('week').add(7, 'd'),
   };
-  
+
   const getStartDay = (day: any) => {
     return day.startOf('d').toDate();
   };
   const getEndDay = (day: any) => {
     return day.endOf('d').toDate();
   };
-  
 
   const loadListTrans = async () => {
     const db = await getDBConnection();
     // get income amount
-    const incomeThisMonth = await getTransactions(
-      db,
-      moment(TODAY).startOf('M').toDate(),
-      moment(TODAY).endOf('M').toDate(),
-      {category: 'income'},
-    );
+    const incomeThisMonth = await getTransactions(db, {
+      startDate: moment(TODAY).startOf('M').toDate(),
+      endDate: moment(TODAY).endOf('M').toDate(),
+      category: 'income',
+    });
     if (incomeThisMonth.length > 0) {
       setSalary(incomeThisMonth[0].amount);
     }
 
     const result = await Promise.all(
       Object.keys(DAY).map((day: any) => {
-        return getTransactions(db, getStartDay(DAY[day]), getEndDay(DAY[day]));
+        return getTransactions(db, {
+          startDate: getStartDay(DAY[day]),
+          endDate: getEndDay(DAY[day]),
+        });
       }),
     );
     setTransaction({
@@ -71,20 +76,24 @@ const LineChartGroup = (props: Props) => {
 
   useEffect(() => {
     loadListTrans();
-  }, []);
+  }, [refreshing]);
 
   // Rate Increase Money
   const calcGreenRate = (trans: any[]) => {
+    const incomeEachDay = salary / 30;
     if (trans.length > 0) {
       return (
-        (calcTotalTrans(trans, 1) + salary / (calcTotalTrans(trans, 1) + salary + calcTotalTrans(trans, -1))) * 100
+        ((calcTotalTrans(trans, 1) + incomeEachDay) /
+          (calcTotalTrans(trans, 1) + incomeEachDay + calcTotalTrans(trans, -1))) *
+        100
       );
     }
     return 100;
   };
   const calcRedRate = (trans: any[]) => {
+    const incomeEachDay = salary / 30;
     if (trans.length > 0) {
-      return (calcTotalTrans(trans, -1) / (calcTotalTrans(trans, 1) + salary + calcTotalTrans(trans, -1))) * 100;
+      return (calcTotalTrans(trans, -1) / (calcTotalTrans(trans, 1) + incomeEachDay + calcTotalTrans(trans, -1))) * 100;
     }
     return 0;
   };

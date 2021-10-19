@@ -80,7 +80,7 @@ export async function mockups(db: SQLiteDatabase) {
     categoryId: 2,
     factor: -1,
     note: 'rent house',
-    amount: 9999999,
+    amount: 99999,
     walletId: 2,
   });
   
