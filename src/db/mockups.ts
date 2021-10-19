@@ -88,6 +88,4 @@ export async function mockups(db: SQLiteDatabase) {
     startDate: moment(new Date()).startOf('day').toDate(),
     endDate: moment(new Date()).endOf('day').toDate(),
   });
-  console.log('==== ', trans);
-  await createSaveMoney(db, {amount: 1000000, description: 'For fun'});
 }

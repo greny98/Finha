@@ -8,7 +8,7 @@ import moment from 'moment';
 
 interface Props {}
 
-const SuccessSaveMoney = (props: Props) => {
+const InfoSaveMoney = (props: Props) => {
   // STATE
   const [saveMoney, setSaveMoney] = useState<any>({});
   //Navigation
@@ -25,7 +25,6 @@ const SuccessSaveMoney = (props: Props) => {
     if (result.length > 0) {
       setSaveMoney(result[0]);
     }
-    console.log('🚀 ~ file: SuccessSaveMoney.tsx ~ line 21 ~ loadSaveMoney ~ result', result);
   };
 
   useEffect(() => {
@@ -35,9 +34,9 @@ const SuccessSaveMoney = (props: Props) => {
   return (
     <Layout style={styles.root}>
       <Layout style={styles.formContainer}>
-        <Image source={require('assets/images/check-circle-2.png')} />
+        <Image source={require('assets/images/info.png')} />
         <Layout style={{marginTop: 40}}>
-          <Text style={styles.textStyle}>Ting Ting! Mục tiêu tiết kiệm của bạn vừa được thiết lập</Text>
+          <Text style={styles.textStyle}>Bạn đã thiết lập mục tiêu tiết kiệm</Text>
           <Text style={styles.textStyle}>
             Bạn cần tiết kiệm<Text style={{fontWeight: 'bold'}}> {convertCurrencyVN(Number(saveMoney.amount))}</Text>{' '}
             trong tháng {moment().format('M')} này
@@ -87,4 +86,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 });
-export default SuccessSaveMoney;
+export default InfoSaveMoney;

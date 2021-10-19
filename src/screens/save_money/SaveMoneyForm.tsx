@@ -3,18 +3,24 @@ import React, {useState} from 'react';
 import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import TextInputGroup from 'components/common/TextInputGroup';
 import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
+import {createSaveMoney, getDBConnection} from 'db/db-service';
 
 interface Props {}
 
 const SaveMoneyForm = (props: Props) => {
   const [price, setPrice] = useState(0);
-  const [folderName, setFolderName] = useState('');
-  const [walletType, setWalletType] = useState('');
+  const [target, setTarget] = useState('');
 
   //Navigation
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
-  const navigateSuccessSaveMoney = () => {
+  const navigateSuccessSaveMoney = async () => {
+    const db = await getDBConnection();
+    const createData = {
+      amount: price,
+      description: target,
+    };
+    await createSaveMoney(db, createData);
     navigation.navigate('NoticeSuccess');
   };
 
@@ -23,23 +29,21 @@ const SaveMoneyForm = (props: Props) => {
       <Layout style={styles.formContainer}>
         <Layout>
           <Text>Số tiền tiết kiệm mục tiêu</Text>
-          <Input onChangeText={nextValue => setPrice(Number(nextValue))} style={styles.inputStyle} />
+          <Input
+            keyboardType="numeric"
+            onChangeText={nextValue => setPrice(Number(nextValue))}
+            style={styles.inputStyle}
+          />
         </Layout>
         <Layout style={styles.groupText}>
           <TextInputGroup
             style={styles.textInput}
             layoutProps={{style: styles.textInputLayout}}
-            onChangeText={text => setFolderName(text)}
+            onChangeText={text => setTarget(text)}
             label="Mục đích chính"
           />
-          <TextInputGroup
-            style={styles.textInput}
-            layoutProps={{style: styles.textInputLayout}}
-            onChangeText={text => setFolderName(text)}
-            label="Thời gian"
-          />
         </Layout>
-        <TouchableOpacity onPress={navigateSuccessSaveMoney}>
+        <TouchableOpacity onPress={navigateSuccessSaveMoney} disabled={!(Boolean(target) && price !== 0)}>
           <Layout style={{display: 'flex', alignItems: 'center'}}>
             <Layout style={styles.btnStyle}>
               <Text style={{color: '#fff'}}>Xác nhận</Text>
@@ -91,8 +95,8 @@ const styles = StyleSheet.create({
     width: 150,
     height: 40,
     borderRadius: 60,
-    justifyContent:'center',
-    alignItems:'center'
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   faceStyle: {
     position: 'absolute',

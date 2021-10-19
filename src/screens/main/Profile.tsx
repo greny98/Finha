@@ -31,9 +31,9 @@ const Profile = (props: Props) => {
     if (resultIncome.length > 0) {
       setIncome(resultIncome[0]);
     }
-    const result = await getProfile(db);
-    if (result.length > 0) {
-      setTotal(result[0].amount);
+    const profileResult = await getProfile(db);
+    if (profileResult.length > 0) {
+      setTotal(profileResult[0].amount);
     }
   };
 

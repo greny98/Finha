@@ -5,6 +5,7 @@ import SaveMoneyLoading from 'screens/save_money/SaveMoneyLoading';
 import SaveMoneyForm from 'screens/save_money/SaveMoneyForm';
 import WarningSaveMoneyActivity from 'screens/save_money/WarningSaveMoneyActivity';
 import SuccessSaveMoney from 'screens/save_money/SuccessSaveMoney';
+import InfoSaveMoney from 'screens/save_money/InfoSaveMoney';
 
 interface Props {}
 
@@ -21,6 +22,8 @@ const TargetStack = (props: Props) => {
       <Stack.Screen name="SaveForm" component={SaveMoneyForm} />
       <Stack.Screen name="WarningSaveMoney" component={WarningSaveMoneyActivity} />
       <Stack.Screen name="NoticeSuccess" component={SuccessSaveMoney} />
+      <Stack.Screen name="InfoSave" component={InfoSaveMoney} />
+
     </Stack.Navigator>
   );
 };

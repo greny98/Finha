@@ -332,7 +332,7 @@ export const getSaveMoney = async (db: SQLiteDatabase) => {
   const current = new Date();
   const startStr = moment(current).startOf('month').format('YYYY-MM-DD HH:mm:SS.SSS');
   const endStr = moment(current).endOf('month').format('YYYY-MM-DD HH:mm:SS.SSS');
-  const query = `SELECT * FROM access_status BETWEEN '${startStr}' AND '${endStr}');`;
+  const query = `SELECT * FROM save_money WHERE endDate = '${endStr}';`;
   console.log('======\n', query);
   const results = await db.executeSql(query);
   return postHandler(results);

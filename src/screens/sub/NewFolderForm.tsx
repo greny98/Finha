@@ -8,13 +8,12 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
-  TouchableWithoutFeedback
+  TouchableWithoutFeedback,
 } from 'react-native';
 import TextInputGroup from 'components/common/TextInputGroup';
 import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
-import {createTransactions, getAllCategories, getDBConnection, getWallets} from 'db/db-service';
+import {createTransactions, getAllCategories, getDBConnection, getProfile, getWallets} from 'db/db-service';
 import {Picker} from '@react-native-picker/picker';
-import moment from 'moment';
 
 const NewFolderForm = () => {
   //Navigation
@@ -60,14 +59,25 @@ const NewFolderForm = () => {
 
   const createTrans = async () => {
     const db = await getDBConnection();
-    await createTransactions(db, {
+    const profileResult = await getProfile(db);
+    const dataCreateTrans = {
       categoryId: categoryId,
       factor: selectedIndex === 0 ? -1 : 1,
       note: notes,
       amount: moneyAmount,
       date: new Date(),
       walletId: walletId,
-    });
+    };
+    if (moneyAmount > profileResult[0].amount) {
+      return navigation.navigate<any>('Target', {
+        screen: 'WarningSaveMoney',
+        params: {
+          dataCreateTrans,
+        },
+      });
+    }
+
+    await createTransactions(db, dataCreateTrans);
     navigateSuccess();
   };
 
