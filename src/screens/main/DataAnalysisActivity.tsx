@@ -17,29 +17,6 @@ interface IInfoDict {
   name: string;
 }
 
-const infoDict: {[key: string]: IInfoDict} = {
-  market: {
-    color: '#00C689',
-    price: 40000,
-    name: 'Đi chợ',
-  },
-  living: {
-    color: '#FE645A',
-    price: 60000,
-    name: 'Sinh hoạt',
-  },
-  rent: {
-    color: '#2A327D',
-    price: 20000,
-    name: 'Thuê nhà',
-  },
-  payoff: {
-    color: '#FFB039',
-    price: 30000,
-    name: 'Trả góp',
-  },
-};
-
 const DataAnalysisActivity = (props: Props) => {
   const {width, height} = Dimensions.get('screen');
 
@@ -92,7 +69,7 @@ const DataAnalysisActivity = (props: Props) => {
   }, [filterTime]);
 
   // Logic Data
-
+  
   const countPercentage = (amount: number, totalAmount: number) => Math.round((amount / totalAmount) * 100);
   const getAmountAndColor = (trans: any, factor: number) => {
     return [

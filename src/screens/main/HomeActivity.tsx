@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Layout, Text} from '@ui-kitten/components';
-import {StyleSheet, Image, SafeAreaView, ScrollView, TouchableOpacity} from 'react-native';
+import {StyleSheet, Image, SafeAreaView, ScrollView, TouchableOpacity, RefreshControl} from 'react-native';
 import CardInfo from 'components/home/CardInfo';
 import InfoGroup from 'components/home/InfoGroup';
 import LineChartGroup from 'components/home/LineChartGroup';
@@ -10,6 +10,10 @@ import moment from 'moment';
 import {calcTotalTrans} from 'utils/utils';
 
 interface Props {}
+
+const wait = (timeout: any) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
 
 const HomeActivity = (props: Props) => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
@@ -25,6 +29,8 @@ const HomeActivity = (props: Props) => {
   const [transYesterday, setTransYesterday] = useState<any>([]);
 
   const [salary, setSalary] = useState(0);
+
+  const [refreshing, setRefreshing] = useState(false);
 
   // FUNCTION
   const loadListTrans = async () => {
@@ -83,13 +89,23 @@ const HomeActivity = (props: Props) => {
     },
   };
 
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => {
+      setRefreshing(false);
+      loadListTrans();
+    });
+  }, []);
+
   useEffect(() => {
     loadListTrans();
   }, []);
 
   return (
     <SafeAreaView>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
         <Layout style={styles.headerContainer}>
           <Image source={require('assets/images/header.png')} resizeMode="cover" style={styles.imageBG} />
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.cardInfoContainer}>

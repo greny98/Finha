@@ -10,7 +10,7 @@ const Tab = createBottomTabNavigator();
 
 const TabNav: React.FC = () => {
   return (
-    <Tab.Navigator tabBar={props => <BtnNavigationGroup {...props} />}>
+    <Tab.Navigator tabBar={props => <BtnNavigationGroup {...props} />} initialRouteName="Home">
       <Tab.Screen name="Home" component={HomeActivity} options={{headerShown: false, tabBarLabel: 'Tổng quan'}} />
       <Tab.Screen
         name="DataAnalysis"

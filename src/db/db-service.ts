@@ -163,7 +163,13 @@ export const getTransactions = async (db: SQLiteDatabase, filters: any) => {
   }
 
   let where = '';
-  if (Object.keys(filters).length > 0) {
+  let haveWhere = false;
+  Object.keys(filters).forEach(key => {
+    if (key !== 'startDate' && key !== 'endDate') {
+      haveWhere = true;
+    }
+  });
+  if (Object.keys(filters).length > 0 && haveWhere) {
     where = 'WHERE ';
     Object.entries(filters).forEach(([field, value]) => {
       let editedValue = value;
@@ -303,7 +309,7 @@ export const getAccessStatus = async (db: SQLiteDatabase) => {
 export interface SaveMoney {
   id?: number;
   amount: number;
-  target: string;
+  description: string;
   fromDate?: Date | string;
   endDate?: Date | string;
 }
@@ -312,8 +318,8 @@ export const createSaveMoney = async (db: SQLiteDatabase, info: SaveMoney) => {
   const fromDate = moment(new Date()).format('YYYY-MM-DD HH:mm:SS.SSS');
   const endDate = moment(new Date()).endOf('month').format('YYYY-MM-DD HH:mm:SS.SSS');
   const query = `
-    INSERT INTO save_money (amount, target, fromDate, endDate)
-    VALUES(${info.amount}, '${info.target}', '${fromDate}', '${endDate}');
+    INSERT INTO save_money (amount, description, fromDate, endDate)
+    VALUES(${info.amount}, '${info.description}', '${fromDate}', '${endDate}');
   `;
   console.log('======\n', query);
   const results = await db.executeSql(query);

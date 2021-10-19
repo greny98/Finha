@@ -13,8 +13,7 @@ const FirstIntroActivity = (props: Props) => {
   const navigateHome = async () => {
     const db = await getDBConnection();
     await createAccessStatus(db);
-
-    navigation.navigate('Tab', {screen: 'DataAnalysis'});
+    navigation.navigate('Tab', {screen: 'Home'});
   };
 
   const nextIntro = () => {

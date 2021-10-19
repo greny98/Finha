@@ -59,11 +59,10 @@ export async function mockups(db: SQLiteDatabase) {
     date: moment().startOf('week').add(6, 'd').toDate(),
     walletId: 1,
   });
-  let trans = await getTransactions(
-    db,
-    moment(new Date()).startOf('day').toDate(),
-    moment(new Date()).endOf('day').toDate(),
-  );
+  let trans = await getTransactions(db, {
+    startDate: moment(new Date()).startOf('day').toDate(),
+    endDate: moment(new Date()).endOf('day').toDate(),
+  });
   console.log('==== ', trans);
   // const trans1 = await getTransactions(
   //   db,
@@ -74,6 +73,8 @@ export async function mockups(db: SQLiteDatabase) {
   // console.log('==== ', trans1);
   // await createAccessStatus(db);
   // console.log('=====', await getAccessStatus(db));
+  console.log("++++++++++++++++++++++++++++++++");
+
   await updateTransaction(db, {
     id: 1,
     categoryId: 2,
@@ -82,11 +83,11 @@ export async function mockups(db: SQLiteDatabase) {
     amount: 9999999,
     walletId: 2,
   });
-  trans = await getTransactions(
-    db,
-    moment(new Date()).startOf('day').toDate(),
-    moment(new Date()).endOf('day').toDate(),
-  );
+  
+  trans = await getTransactions(db, {
+    startDate: moment(new Date()).startOf('day').toDate(),
+    endDate: moment(new Date()).endOf('day').toDate(),
+  });
   console.log('==== ', trans);
-  await createSaveMoney(db, {amount: 1000000, fromDate: new Date(), target: 'For fun'});
+  await createSaveMoney(db, {amount: 1000000, description: 'For fun'});
 }
