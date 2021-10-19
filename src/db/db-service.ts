@@ -98,7 +98,7 @@ export interface Transaction {
   categoryId: number;
   walletId: number;
   factor: number; // thu: +1, chi: -1
-  date: Date | string;
+  date?: Date | string;
   amount: number;
   note: string;
 }
@@ -126,7 +126,6 @@ export const getTransactions = async (db: SQLiteDatabase, start: Date, end: Date
   if (Object.keys(filters).length > 0) {
     where = 'WHERE ';
     Object.entries(filters).forEach(([field, value]) => {
-      console.log('====== field, value', field, value);
       let editedValue = value;
       if (typeof value == 'string') {
         editedValue = `'${value}'`;
@@ -139,11 +138,12 @@ export const getTransactions = async (db: SQLiteDatabase, start: Date, end: Date
         (SELECT * FROM
             (SELECT * FROM transactions WHERE date BETWEEN '${startStr}' AND '${endStr}') AS trans
               LEFT JOIN 
-              (SELECT name as category, id FROM categories) as categories 
-              ON trans.categoryId = categories.id) as trans_with_cate
-        LEFT JOIN (SELECT name as wallet, id FROM wallets) as wallets 
-        ON trans_with_cate.walletId = wallets.id 
-    ${where};
+              (SELECT name as category, id as cateId FROM categories) as categories 
+              ON trans.categoryId = categories.cateId) as trans_with_cate
+        LEFT JOIN (SELECT name as wallet, id as wallId FROM wallets) as wallets 
+        ON trans_with_cate.walletId = wallets.wallId 
+    ${where}
+    ORDER BY id DESC;
   `;
   console.log('=====\n', query);
   const results = await db.executeSql(query);
@@ -159,13 +159,15 @@ export const updateTransaction = async (db: SQLiteDatabase, trans: Transaction) 
       let edited = value;
       if (typeof value == 'string') {
         edited = `'${value}'`;
+      } else if (field.includes('date')) {
+        edited = `'${moment(value).format('YYYY-MM-DD HH:mm:SS.SSS')}'`;
       }
       setCols += `${field} = ${edited}`;
-      if (idx < nFields - 1) edited += ',';
+      if (idx < nFields - 1) setCols += ',';
     }
   });
   const query = `
-  UPDATE table
+  UPDATE transactions
   ${setCols}
   WHERE
     id = ${trans.id} ;

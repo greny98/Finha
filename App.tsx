@@ -33,8 +33,8 @@ const App = () => {
   useEffect(() => {
     const loadDb = async () => {
       const db = await getDBConnection();
-      const deleteTables = Object.keys(models).map(tableName => deleteTable(db, tableName));
-      await Promise.all(deleteTables);
+      // const deleteTables = Object.keys(models).map(tableName => deleteTable(db, tableName));
+      // await Promise.all(deleteTables);
       const createTables = Object.keys(models).map(tableName => createTable(db, tableName, models[tableName]));
       await Promise.all(createTables);
       const categories = await getAllCategories(db);

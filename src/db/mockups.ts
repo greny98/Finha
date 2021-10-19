@@ -79,8 +79,7 @@ export async function mockups(db: SQLiteDatabase) {
     categoryId: 2,
     factor: -1,
     note: 'rent house',
-    amount: 3000000,
-    date: new Date(),
+    amount: 9999999,
     walletId: 2,
   });
   trans = await getTransactions(
