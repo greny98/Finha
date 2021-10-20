@@ -1,29 +1,27 @@
-import {Button, Icon, Layout, Tab, TabBar, Text, TopNavigation, TopNavigationAction} from '@ui-kitten/components';
+import {Layout, Text} from '@ui-kitten/components';
 import CustomButton from 'components/common/CustomButton';
 import React, {useEffect, useState} from 'react';
+import {useRoute} from '@react-navigation/core';
 import {
-  Dimensions,
   Keyboard,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
+  TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
 import TextInputGroup from 'components/common/TextInputGroup';
 import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
-import {
-  createTransactions,
-  getAllCategories,
-  getDBConnection,
-  getProfile,
-  getSaveMoney,
-  getWallets,
-} from 'db/db-service';
+import {getAllCategories, getDBConnection, getProfile, getWallets, updateTransaction} from 'db/db-service';
 import {Picker} from '@react-native-picker/picker';
 import {getCategoryName} from 'utils/utils';
 
-const NewFolderForm = () => {
+const UpdateTransactionForm = () => {
+  // Route
+  const route = useRoute<any>();
+  const {transInfo} = route.params;
+
   //Navigation
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
@@ -31,29 +29,14 @@ const NewFolderForm = () => {
     navigation.navigate<any>('Sub', {screen: 'CreateSuccess'});
   };
 
-  const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const [walletId, setWalletId] = useState(0);
+  const [walletId, setWalletId] = useState(transInfo.walletId);
   const [walletType, setWalletType] = useState<any>([]);
 
-  const [categoryId, setCategoryId] = useState(0);
+  const [categoryId, setCategoryId] = useState(transInfo.categoryId);
   const [categoryType, setCategoryType] = useState<any>([]);
 
-  const [moneyAmount, setMoneyAmount] = useState(0);
-  const [notes, setNotes] = useState('');
-
-  const {width, height} = Dimensions.get('screen');
-
-  const BackIcon = (props: any) => <Icon {...props} name="arrow-back" fill="#FFF" />;
-
-  const BackAction = () => (
-    <TopNavigationAction icon={BackIcon} onPress={() => navigation.navigate<any>('Tab', {screen: 'Home'})} />
-  );
-
-  const SetTitle = (props: any, title: string) => (
-    <Text {...props} style={{color: 'white', fontSize: 20}}>
-      {title}
-    </Text>
-  );
+  const [moneyAmount, setMoneyAmount] = useState<any>(transInfo.amount + '');
+  const [notes, setNotes] = useState(transInfo.note);
 
   // Get DATA
   const loadWalletAndCategory = async () => {
@@ -64,32 +47,17 @@ const NewFolderForm = () => {
     setCategoryType(categoryList);
   };
 
-  const createTrans = async () => {
+  const updateTrans = async () => {
     const db = await getDBConnection();
-    const saveMoneyList: any = await getSaveMoney(db);
-
-    const profileResult = await getProfile(db);
-    const dataCreateTrans = {
-      categoryId: categoryId,
-      factor: selectedIndex === 0 ? -1 : 1,
+    const updateTrans = {
+      id: transInfo.id,
+      categoryId: transInfo.categoryId,
+      factor: transInfo.factor,
       note: notes,
       amount: moneyAmount,
-      date: new Date(),
-      walletId: walletId,
+      walletId: transInfo.walletId,
     };
-    const restAmount =
-      profileResult[0].amount - (Object.keys(saveMoneyList[0]).length > 0 ? saveMoneyList[0].amount : 0);
-
-    if (selectedIndex === 0 && moneyAmount > restAmount) {
-      return navigation.navigate<any>('Target', {
-        screen: 'WarningSaveMoney',
-        params: {
-          dataCreateTrans,
-        },
-      });
-    }
-
-    await createTransactions(db, dataCreateTrans);
+    await updateTransaction(db, updateTrans);
     navigateSuccess();
   };
 
@@ -100,34 +68,16 @@ const NewFolderForm = () => {
   return (
     <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
       <TouchableWithoutFeedback style={{flex: 1}} onPress={Keyboard.dismiss}>
-        <ScrollView style={{marginBottom: 16, backgroundColor: 'red'}}>
-          <Layout>
-            <TopNavigation
-              accessoryLeft={BackAction}
-              title={(props: any) => SetTitle(props, 'Thêm giao dịch')}
-              style={{backgroundColor: '#00C6C6'}}
-            />
-            <TabBar
-              selectedIndex={selectedIndex}
-              onSelect={index => setSelectedIndex(index)}
-              indicatorStyle={{
-                backgroundColor: '#fff',
-                zIndex: 10,
-              }}
-              style={{backgroundColor: '#00C6C6'}}>
-              <Tab title={(props: any) => SetTitle(props, 'Chi')} />
-              <Tab title={(props: any) => SetTitle(props, 'Thu')} />
-            </TabBar>
-            <Layout
-              style={{
-                width: '100%',
-                height: 20,
-                backgroundColor: '#00C6C6',
-                top: -4,
-                zIndex: 2,
-                marginBottom: 24,
-              }}
-            />
+        <ScrollView style={{marginBottom: 16}}>
+          <Layout style={{padding: 20, flexDirection: 'row', alignItems: 'center'}}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <Layout style={styles.btnBackStyle}>
+                <Text style={{fontSize: 18}}>Quay lại</Text>
+              </Layout>
+            </TouchableOpacity>
+            <Layout>
+              <Text category="h4">Giao dịch {transInfo.factor === 1 ? 'Thu' : 'Chi'}</Text>
+            </Layout>
           </Layout>
           <Layout style={styles.root}>
             <Layout style={{width: '90%'}}>
@@ -175,14 +125,16 @@ const NewFolderForm = () => {
               onChangeText={text => setMoneyAmount(Number(text))}
               label="Số tiền"
               keyboardType="numeric"
+              value={moneyAmount}
             />
             <TextInputGroup
               style={styles.textInput}
               layoutProps={{style: styles.textInputLayout}}
               onChangeText={text => setNotes(text)}
               label="Ghi chú"
+              value={notes}
             />
-            <CustomButton title="Lưu" onPress={createTrans} />
+            <CustomButton title="Cập nhật" onPress={updateTrans} />
           </Layout>
         </ScrollView>
       </TouchableWithoutFeedback>
@@ -218,6 +170,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
   },
+  btnBackStyle: {
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 6,
+    marginRight: 16,
+  },
 });
 
-export default NewFolderForm;
+export default UpdateTransactionForm;

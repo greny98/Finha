@@ -1,113 +1,94 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {Layout, Text, Input, Modal} from '@ui-kitten/components';
-import {StyleSheet, TouchableOpacity} from 'react-native';
-import CustomButton from 'components/common/CustomButton';
-import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
+import {RefreshControl, SafeAreaView, ScrollView, StyleSheet} from 'react-native';
 import {convertCurrencyVN} from 'utils/utils';
 import moment from 'moment';
-import {getDBConnection, getProfile, getTransactions, Transaction, updateTransaction} from 'db/db-service';
+import {getDBConnection, getProfile, getSaveMoney} from 'db/db-service';
 
 interface Props {}
 
+const wait = (timeout: any) => {
+  return new Promise(resolve => setTimeout(resolve, timeout));
+};
 const Profile = (props: Props) => {
-  const [income, setIncome] = useState<Transaction>({} as Transaction);
+  const [saveMoney, setSaveMoney] = useState<any>({});
   const [total, setTotal] = useState(0);
-  const [input, setInput] = useState(0);
-  const [showModal, setShowModal] = useState(false);
-
-  const START_MONTH = moment(new Date()).startOf('M').toDate();
-  const END_MONTH = moment(new Date()).endOf('M').toDate();
+  const [refreshing, setRefreshing] = useState(false);
 
   //Navigation
-  const navigation = useNavigation<NavigationProp<ParamListBase>>();
 
   const loadIncome = async () => {
     const db = await getDBConnection();
-    const resultIncome = await getTransactions(db, {
-      startDate: START_MONTH,
-      endDate: END_MONTH,
-      category: 'income',
-    });
-    if (resultIncome.length > 0) {
-      setIncome(resultIncome[0]);
+    const result = await getSaveMoney(db);
+    if (result.length > 0) {
+      setSaveMoney(result[0]);
     }
     const profileResult = await getProfile(db);
     if (profileResult.length > 0) {
-      setTotal(profileResult[0].amount);
+      const restAmount = profileResult[0].amount - (Object.keys(saveMoney).length > 0 ? saveMoney.amount : 0);
+      setTotal(restAmount);
     }
-  };
-
-  const setNewIncome = async () => {
-    const db = await getDBConnection();
-    const updateIncome = {
-      id: income.id,
-      categoryId: income.categoryId,
-      factor: income.factor,
-      note: income.note,
-      amount: input,
-      walletId: income.walletId,
-    };
-    await updateTransaction(db, updateIncome);
-    loadIncome();
-    setShowModal(false);
   };
 
   useEffect(() => {
     loadIncome();
   }, []);
 
-  return (
-    <Layout style={styles.root}>
-      <Layout style={{alignItems: 'center'}}>
-        <Layout style={[styles.boxContainer, {padding: 12, marginBottom: 20}]}>
-          {total !== 0 ? (
-            <>
-              <Text style={styles.textStyle}>Tổng số tiền hiện tại: </Text>
-              <Text style={{fontSize: 24, fontWeight: 'bold', color: total > 0 ? '#00C6BA' : '#FE645A'}}>
-                {convertCurrencyVN(total)}
-              </Text>
-              <Text style={styles.textStyle}>Thu nhập hiện tại: </Text>
-              <Text style={{fontSize: 24, fontWeight: 'bold'}}>{convertCurrencyVN(income.amount)}</Text>
-            </>
-          ) : (
-            <Text style={[styles.textStyle, {textAlign: 'center'}]}>
-              Bạn chưa thiết lập thu chi. Xin hãy thiết lập thu chi của mình
-            </Text>
-          )}
-        </Layout>
-        <Layout>
-          <TouchableOpacity onPress={() => setShowModal(true)}>
-            <Layout style={[styles.btnStyle]}>
-              <Text style={{color: '#fff'}}>
-                {Object.keys(income).length > 0 ? 'Thay đổi thu nhập' : 'Thiết lập thu nhập'}
-              </Text>
-            </Layout>
-          </TouchableOpacity>
-        </Layout>
-      </Layout>
+  const onRefresh = useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => {
+      setRefreshing(false);
+      loadIncome();
+    });
+  }, []);
 
-      <Modal visible={showModal} backdropStyle={styles.backdrop} onBackdropPress={() => setShowModal(false)}>
-        <Layout style={[styles.boxContainer, styles.modalContainer]}>
-          <Text style={styles.textStyle}>Tổng thu nhập tháng của bạn</Text>
-          <Layout style={[styles.boxContainer, {flexDirection: 'row'}]}>
-            <Input
-              keyboardType="numeric"
-              onChangeText={nextValue => setInput(Number(nextValue))}
-              style={styles.inputStyle}
-            />
-            <Text style={styles.textStyle}>VND</Text>
+  return (
+    <SafeAreaView>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+        <Layout style={styles.root}>
+          <Layout style={{alignItems: 'center', width: '100%'}}>
+            <Text style={styles.titleStyle}>Thông tin hồ sơ</Text>
           </Layout>
-          <Layout style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-            <TouchableOpacity onPress={() => setShowModal(false)}>
-              <Layout style={[styles.btnCancelStyle]}>
-                <Text style={{color: '#fff'}}>Hủy</Text>
-              </Layout>
-            </TouchableOpacity>
-            <CustomButton title="Xác nhận" onPress={setNewIncome} disabled={input === 0} />
+          <Layout style={{alignItems: 'flex-start'}}>
+            <Layout style={[styles.boxContainer, {paddingVertical: 12, paddingHorizontal: 20, marginBottom: 20}]}>
+              {total !== 0 ? (
+                <>
+                  <Text style={styles.textStyle}>Tổng số tiền hiện tại: </Text>
+                  <Text
+                    style={{
+                      fontSize: 24,
+                      fontWeight: 'bold',
+                      marginBottom: 12,
+                      marginLeft: 12,
+                      color: total > 0 ? '#00C6BA' : '#FE645A',
+                    }}>
+                    {convertCurrencyVN(total)}
+                  </Text>
+                  <Text style={styles.textStyle}>
+                    Tiền tiết kiệm trong tháng{' '}
+                    <Text style={{fontWeight: 'bold', fontSize: 24}}>{moment().format('M')} </Text>này:{' '}
+                  </Text>
+                  {Object.keys(saveMoney).length > 0 ? (
+                    <Text
+                      style={{fontSize: 24, fontWeight: 'bold', marginBottom: 12, marginLeft: 12, color: '#00C6BA'}}>
+                      {convertCurrencyVN(saveMoney.amount)}
+                    </Text>
+                  ) : (
+                    <Text style={{fontSize: 24, fontWeight: 'bold'}}>Chưa thiết lập</Text>
+                  )}
+                </>
+              ) : (
+                <Text style={[styles.textStyle, {textAlign: 'center'}]}>
+                  Bạn chưa thiết lập thu chi. Xin hãy thiết lập thu chi của mình
+                </Text>
+              )}
+            </Layout>
           </Layout>
         </Layout>
-      </Modal>
-    </Layout>
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -115,12 +96,14 @@ const styles = StyleSheet.create({
   root: {
     position: 'relative',
     height: '100%',
-    alignItems: 'center',
-    justifyContent: 'space-around',
+    alignItems: 'flex-start',
   },
-  boxContainer: {
-    alignItems: 'center',
+  titleStyle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    margin: 16,
   },
+  boxContainer: {},
   textStyle: {
     fontSize: 24,
   },

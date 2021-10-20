@@ -114,12 +114,17 @@ const NoteTransaction = (props: Props) => {
             onChange={onChangeToDate}
           />
         )}
-        <Layout style={styles.root}>
-          <Layout style={styles.backWrapper}>
-            <TouchableOpacity onPress={navigateHome}>
+        <Layout style={{padding: 16, flexDirection: 'row', alignItems: 'center'}}>
+          <TouchableOpacity onPress={navigateHome}>
+            <Layout style={styles.btnBackStyle}>
               <Text style={{fontSize: 18}}>Quay lại</Text>
-            </TouchableOpacity>
+            </Layout>
+          </TouchableOpacity>
+          <Layout>
+            <Text category="h4">Danh sách giao dịch</Text>
           </Layout>
+        </Layout>
+        <Layout style={styles.root}>
           <Layout style={[styles.itemContainer, {padding: 10, alignItems: 'center'}]}>
             <Layout>
               <TouchableOpacity onPress={() => setShowFromDate(true)}>
@@ -143,9 +148,14 @@ const NoteTransaction = (props: Props) => {
           </Layout>
           {/* TODO: Display List transaction here */}
           {listTrans.map((trans: any, index: any) => (
-            <Layout style={styles.itemContainer} key={`${trans.id}+${index}`}>
-              <NoteItem data={trans} />
-            </Layout>
+            <TouchableOpacity
+              style={{width: '100%', alignItems: 'center'}}
+              onPress={() => navigation.navigate('Sub', {screen: 'UpdateFolder', params: {transInfo: trans}})}
+              key={`${trans.id}+${index}`}>
+              <Layout style={styles.itemContainer}>
+                <NoteItem data={trans} />
+              </Layout>
+            </TouchableOpacity>
           ))}
           {listTrans.length === 0 && <Text style={styles.contentStyle}>Không có giao dịch nào được tìm thấy</Text>}
         </Layout>
@@ -162,7 +172,6 @@ const styles = StyleSheet.create({
   backWrapper: {
     width: '100%',
     justifyContent: 'center',
-    // alignItems: 'center',
     height: 50,
     paddingLeft: 16,
   },
@@ -212,6 +221,12 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: 'normal',
     fontStyle: 'italic',
+  },
+  btnBackStyle: {
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 6,
+    marginRight: 5,
   },
 });
 
