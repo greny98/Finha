@@ -77,8 +77,7 @@ const NewFolderForm = () => {
       date: new Date(),
       walletId: walletId,
     };
-    const restAmount =
-      profileResult[0].amount - (Object.keys(saveMoneyList[0]).length > 0 ? saveMoneyList[0].amount : 0);
+    const restAmount = profileResult[0].amount - (saveMoneyList.length > 0 ? saveMoneyList[0].amount : 0);
 
     if (selectedIndex === 0 && moneyAmount > restAmount) {
       return navigation.navigate<any>('Target', {

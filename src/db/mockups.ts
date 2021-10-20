@@ -1,10 +1,8 @@
 import {
-  createAccessStatus,
-  createCategories,
   createSaveMoney,
   createTransactions,
-  getAccessStatus,
   getTransactions,
+  updateSaveMoney,
   updateTransaction,
 } from 'db/db-service';
 import moment from 'moment';
@@ -73,8 +71,6 @@ export async function mockups(db: SQLiteDatabase) {
   // console.log('==== ', trans1);
   // await createAccessStatus(db);
   // console.log('=====', await getAccessStatus(db));
-  console.log("++++++++++++++++++++++++++++++++");
-
   await updateTransaction(db, {
     id: 1,
     categoryId: 2,
@@ -83,7 +79,7 @@ export async function mockups(db: SQLiteDatabase) {
     amount: 99999,
     walletId: 2,
   });
-  
+
   trans = await getTransactions(db, {
     startDate: moment(new Date()).startOf('day').toDate(),
     endDate: moment(new Date()).endOf('day').toDate(),

@@ -21,7 +21,6 @@ const LineChartGroup = (props: Props) => {
     sat: [],
     sun: [],
   });
-  console.log('🚀 ~ file: LineChartGroup.tsx ~ line 16 ~ LineChartGroup ~ transaction', transaction);
   const [salary, setSalary] = useState(0);
 
   const TODAY = new Date();

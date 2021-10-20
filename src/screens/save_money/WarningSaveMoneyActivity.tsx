@@ -51,7 +51,7 @@ const WarningSaveMoneyActivity = (props: Props) => {
           </TouchableOpacity>
           <TouchableOpacity onPress={createTrans}>
             <Layout style={styles.btnStyle}>
-              <Text style={styles.textButton}>Không, cảm ơn</Text>
+              <Text style={styles.textButton}>Không, Tiếp tục giao dịch</Text>
             </Layout>
           </TouchableOpacity>
         </Layout>

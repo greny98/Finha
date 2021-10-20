@@ -337,3 +337,13 @@ export const getSaveMoney = async (db: SQLiteDatabase) => {
   const results = await db.executeSql(query);
   return postHandler(results);
 };
+
+export const updateSaveMoney = async (db: SQLiteDatabase, saveInfo: SaveMoney) => {
+  const query = `
+  UPDATE save_money
+  SET amount = ${saveInfo.amount}, description = ${saveInfo.description}
+  WHERE id = ${saveInfo.id};
+`;
+  const results = await db.executeSql(query);
+  return postHandler<GetTransactionResult>(results);
+};

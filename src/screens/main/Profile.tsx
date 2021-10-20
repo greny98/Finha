@@ -1,9 +1,11 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Layout, Text, Input, Modal} from '@ui-kitten/components';
-import {RefreshControl, SafeAreaView, ScrollView, StyleSheet} from 'react-native';
+import {RefreshControl, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
 import {convertCurrencyVN} from 'utils/utils';
 import moment from 'moment';
-import {getDBConnection, getProfile, getSaveMoney} from 'db/db-service';
+import {getDBConnection, getProfile, getSaveMoney, updateSaveMoney} from 'db/db-service';
+import CustomButton from 'components/common/CustomButton';
+import TextInputGroup from 'components/common/TextInputGroup';
 
 interface Props {}
 
@@ -13,21 +15,40 @@ const wait = (timeout: any) => {
 const Profile = (props: Props) => {
   const [saveMoney, setSaveMoney] = useState<any>({});
   const [total, setTotal] = useState(0);
+  const [input, setInput] = useState(0);
+  const [note, setNote] = useState('');
+
   const [refreshing, setRefreshing] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
   //Navigation
 
   const loadIncome = async () => {
     const db = await getDBConnection();
-    const result = await getSaveMoney(db);
+    const result: any = await getSaveMoney(db);
+    console.log('🚀 ~ file: Profile.tsx ~ line 29 ~ loadIncome ~ result', result);
     if (result.length > 0) {
       setSaveMoney(result[0]);
+      setInput(result[0].amount);
+      setNote(result[0].description);
     }
     const profileResult = await getProfile(db);
     if (profileResult.length > 0) {
-      const restAmount = profileResult[0].amount - (Object.keys(saveMoney).length > 0 ? saveMoney.amount : 0);
+      const restAmount = profileResult[0].amount - (result.length > 0 ? result[0].amount : 0);
       setTotal(restAmount);
     }
+  };
+
+  const setNewTarget = async () => {
+    const db = await getDBConnection();
+    const updateData = {
+      id: saveMoney.id,
+      amount: input,
+      description: note,
+    };
+    await updateSaveMoney(db, updateData);
+    loadIncome();
+    setShowModal(false);
   };
 
   useEffect(() => {
@@ -70,6 +91,7 @@ const Profile = (props: Props) => {
                     Tiền tiết kiệm trong tháng{' '}
                     <Text style={{fontWeight: 'bold', fontSize: 24}}>{moment().format('M')} </Text>này:{' '}
                   </Text>
+
                   {Object.keys(saveMoney).length > 0 ? (
                     <Text
                       style={{fontSize: 24, fontWeight: 'bold', marginBottom: 12, marginLeft: 12, color: '#00C6BA'}}>
@@ -84,8 +106,48 @@ const Profile = (props: Props) => {
                   Bạn chưa thiết lập thu chi. Xin hãy thiết lập thu chi của mình
                 </Text>
               )}
+              {Object.keys(saveMoney).length > 0 && (
+                <TouchableOpacity onPress={() => setShowModal(true)}>
+                  <Layout style={{alignItems: 'center'}}>
+                    <Layout style={styles.btnStyle}>
+                      <Text style={{color: '#fff'}}>Thiết lập lại mục tiêu tiết kiệm</Text>
+                    </Layout>
+                  </Layout>
+                </TouchableOpacity>
+              )}
             </Layout>
           </Layout>
+          <Modal visible={showModal} backdropStyle={styles.backdrop} onBackdropPress={() => setShowModal(false)}>
+            <Layout style={[styles.boxContainer, styles.modalContainer]}>
+              <Text style={styles.textStyle}>Mục tiêu tiết kiệm mới là</Text>
+              <Layout style={[styles.boxContainer, {flexDirection: 'row'}]}>
+                <Input
+                  keyboardType="numeric"
+                  onChangeText={nextValue => setInput(Number(nextValue))}
+                  style={styles.inputStyle}
+                  value={input.toString()}
+                />
+                <Text style={styles.textStyle}>VND</Text>
+              </Layout>
+              <Layout style={{marginTop: 20}}>
+                <TextInputGroup
+                  style={styles.textInput}
+                  layoutProps={{style: styles.textInputLayout}}
+                  onChangeText={text => setNote(text)}
+                  label="Mục đích chính"
+                  value={note}
+                />
+              </Layout>
+              <Layout style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+                <TouchableOpacity onPress={() => setShowModal(false)}>
+                  <Layout style={[styles.btnCancelStyle]}>
+                    <Text style={{color: '#fff'}}>Hủy</Text>
+                  </Layout>
+                </TouchableOpacity>
+                <CustomButton title="Xác nhận" onPress={setNewTarget} disabled={input === 0} />
+              </Layout>
+            </Layout>
+          </Modal>
         </Layout>
       </ScrollView>
     </SafeAreaView>
@@ -110,13 +172,13 @@ const styles = StyleSheet.create({
   inputStyle: {
     borderWidth: 0,
     borderBottomWidth: 1,
-    width: '40%',
+    width: '60%',
     borderColor: '#000',
   },
   btnStyle: {
     backgroundColor: '#00C6C6',
     borderWidth: 0,
-    borderRadius: 100,
+    borderRadius: 20,
     marginTop: 40,
     alignItems: 'center',
     justifyContent: 'center',
@@ -141,6 +203,13 @@ const styles = StyleSheet.create({
   modalContainer: {
     borderRadius: 10,
     padding: 24,
+  },
+  textInputLayout: {
+    width: '90%',
+    marginBottom: 24,
+  },
+  textInput: {
+    borderRadius: 50,
   },
 });
 

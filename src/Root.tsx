@@ -63,7 +63,9 @@ const Root = (props: Props) => {
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
-      }}>
+      }}
+      initialRouteName="Intro"
+      >
       <Stack.Screen name="Intro" component={IntroStack} />
       <Stack.Screen name="Tab" component={TabNav} />
       <Stack.Screen name="Target" component={TargetStack} />
