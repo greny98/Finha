@@ -2,16 +2,15 @@ import React, {useEffect, useState} from 'react';
 import {Layout} from '@ui-kitten/components';
 import {StyleSheet, View} from 'react-native';
 import VerticalLineChart from '../common/VerticalLineChart';
-import {getDBConnection, getTransactions} from 'db/db-service';
+import {getDBConnection, getProfile, getTransactions} from 'db/db-service';
 import moment from 'moment';
 import {calcTotalTrans} from 'utils/utils';
+import {useNavigation} from '@react-navigation/core';
 
-interface Props {
-  refreshing: boolean;
-}
+interface Props {}
 
 const LineChartGroup = (props: Props) => {
-  const {refreshing} = props;
+  const navigation = useNavigation();
   const [transaction, setTransaction] = useState<any>({
     mon: [],
     tue: [],
@@ -21,9 +20,6 @@ const LineChartGroup = (props: Props) => {
     sat: [],
     sun: [],
   });
-  const [salary, setSalary] = useState(0);
-
-  const TODAY = new Date();
 
   const DAY: any = {
     MONDAY: moment().startOf('week').add(1, 'd'),
@@ -32,7 +28,7 @@ const LineChartGroup = (props: Props) => {
     THURSDAY: moment().startOf('week').add(4, 'd'),
     FRIDAY: moment().startOf('week').add(5, 'd'),
     SATURDAY: moment().startOf('week').add(6, 'd'),
-    SUNDAY: moment().startOf('week').add(7, 'd'),
+    SUNDAY: moment().startOf('week').add(0, 'd'),
   };
 
   const getStartDay = (day: any) => {
@@ -44,15 +40,6 @@ const LineChartGroup = (props: Props) => {
 
   const loadListTrans = async () => {
     const db = await getDBConnection();
-    // get income amount
-    const incomeThisMonth = await getTransactions(db, {
-      startDate: moment(TODAY).startOf('M').toDate(),
-      endDate: moment(TODAY).endOf('M').toDate(),
-      category: 'income',
-    });
-    if (incomeThisMonth.length > 0) {
-      setSalary(incomeThisMonth[0].amount);
-    }
 
     const result = await Promise.all(
       Object.keys(DAY).map((day: any) => {
@@ -74,25 +61,22 @@ const LineChartGroup = (props: Props) => {
   };
 
   useEffect(() => {
-    loadListTrans();
-  }, [refreshing]);
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadListTrans();
+    });
+    return unsubscribe;
+  }, []);
 
   // Rate Increase Money
   const calcGreenRate = (trans: any[]) => {
-    const incomeEachDay = salary / 30;
     if (trans.length > 0) {
-      return (
-        ((calcTotalTrans(trans, 1) + incomeEachDay) /
-          (calcTotalTrans(trans, 1) + incomeEachDay + calcTotalTrans(trans, -1))) *
-        100
-      );
+      return (calcTotalTrans(trans, 1) / (calcTotalTrans(trans, 1) + calcTotalTrans(trans, -1))) * 100;
     }
     return 100;
   };
   const calcRedRate = (trans: any[]) => {
-    const incomeEachDay = salary / 30;
     if (trans.length > 0) {
-      return (calcTotalTrans(trans, -1) / (calcTotalTrans(trans, 1) + incomeEachDay + calcTotalTrans(trans, -1))) * 100;
+      return (calcTotalTrans(trans, -1) / (calcTotalTrans(trans, 1) + calcTotalTrans(trans, -1))) * 100;
     }
     return 0;
   };

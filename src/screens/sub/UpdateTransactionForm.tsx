@@ -8,6 +8,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from 'react-native';
@@ -16,6 +17,7 @@ import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/na
 import {getAllCategories, getDBConnection, getProfile, getWallets, updateTransaction} from 'db/db-service';
 import {Picker} from '@react-native-picker/picker';
 import {getCategoryName} from 'utils/utils';
+import CurrencyInput from 'react-native-currency-input';
 
 const UpdateTransactionForm = () => {
   // Route
@@ -75,7 +77,7 @@ const UpdateTransactionForm = () => {
                 <Text style={{fontSize: 18}}>Quay lại</Text>
               </Layout>
             </TouchableOpacity>
-            <Layout>
+            <Layout style={{paddingLeft: 20}}>
               <Text category="h4">Giao dịch {transInfo.factor === 1 ? 'Thu' : 'Chi'}</Text>
             </Layout>
           </Layout>
@@ -119,21 +121,26 @@ const UpdateTransactionForm = () => {
               </Layout>
             </Layout>
 
-            <TextInputGroup
-              style={styles.textInput}
-              layoutProps={{style: styles.textInputLayout}}
-              onChangeText={text => setMoneyAmount(Number(text))}
-              label="Số tiền"
-              keyboardType="numeric"
-              value={moneyAmount}
-            />
-            <TextInputGroup
-              style={styles.textInput}
-              layoutProps={{style: styles.textInputLayout}}
-              onChangeText={text => setNotes(text)}
-              label="Ghi chú"
-              value={notes}
-            />
+            <Layout style={{width: '90%'}}>
+              <Text category="s2" style={styles.titleStyle}>
+                Số tiền
+              </Text>
+              <CurrencyInput
+                style={styles.inputNumber}
+                value={moneyAmount}
+                onChangeValue={text => setMoneyAmount(Number(text))}
+                separator=","
+                suffix={' VND'}
+                precision={0}
+                minValue={0}
+              />
+            </Layout>
+            <Layout style={{width: '90%'}}>
+              <Text category="s2" style={styles.titleStyle}>
+                Ghi chú
+              </Text>
+              <TextInput style={styles.inputNumber} value={notes} onChangeText={text => setNotes(text)} />
+            </Layout>
             <CustomButton title="Cập nhật" onPress={updateTrans} />
           </Layout>
         </ScrollView>
@@ -154,6 +161,15 @@ const styles = StyleSheet.create({
   },
   textInput: {
     borderRadius: 50,
+  },
+  inputNumber: {
+    borderWidth: 1,
+    width: '100%',
+    borderRadius: 50,
+    borderColor: '#dedede',
+    paddingLeft: 20,
+    marginBottom: 24,
+    height: 50,
   },
   pickerStyle: {
     width: '100%',

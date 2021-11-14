@@ -88,7 +88,10 @@ const NoteTransaction = (props: Props) => {
     setListTrans(transList);
   };
   useEffect(() => {
-    loadListTrans();
+    const unsubscribe = navigation.addListener('focus', () => {
+      loadListTrans();
+    });
+    return unsubscribe;
   }, []);
 
   return (
@@ -224,7 +227,7 @@ const styles = StyleSheet.create({
   },
   btnBackStyle: {
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 4,
     padding: 6,
     marginRight: 5,
   },

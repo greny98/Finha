@@ -30,8 +30,8 @@ const Root = (props: Props) => {
     const loadDb = async () => {
       try {
         const db = await getDBConnection();
-        const deleteTables = Object.keys(models).map(tableName => deleteTable(db, tableName));
-        await Promise.all(deleteTables);
+        // const deleteTables = Object.keys(models).map(tableName => deleteTable(db, tableName));
+        // await Promise.all(deleteTables);
         const createTables = Object.keys(models).map(tableName => createTable(db, tableName, models[tableName]));
         await Promise.all(createTables);
         const categories = await getAllCategories(db);
@@ -43,7 +43,7 @@ const Root = (props: Props) => {
           await createWallets(db);
         }
         await createProfile(db);
-        await mockups(db);
+        // await mockups(db);
         const statusAccess = await getAccessStatus(db);
         if (statusAccess.length === 0) {
           navigation.navigate('Intro', {screen: 'IntroOne'});

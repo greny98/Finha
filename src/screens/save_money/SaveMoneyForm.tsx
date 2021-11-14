@@ -4,6 +4,7 @@ import {Image, StyleSheet, TouchableOpacity} from 'react-native';
 import TextInputGroup from 'components/common/TextInputGroup';
 import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
 import {createSaveMoney, getDBConnection} from 'db/db-service';
+import CurrencyInput from 'react-native-currency-input';
 
 interface Props {}
 
@@ -29,10 +30,14 @@ const SaveMoneyForm = (props: Props) => {
       <Layout style={styles.formContainer}>
         <Layout>
           <Text>Số tiền tiết kiệm mục tiêu</Text>
-          <Input
-            keyboardType="numeric"
-            onChangeText={nextValue => setPrice(Number(nextValue))}
+          <CurrencyInput
             style={styles.inputStyle}
+            value={price}
+            onChangeValue={text => setPrice(Number(text))}
+            separator=","
+            suffix={' VND'}
+            precision={0}
+            minValue={0}
           />
         </Layout>
         <Layout style={styles.groupText}>

@@ -5,15 +5,11 @@ import CardInfo from 'components/home/CardInfo';
 import InfoGroup from 'components/home/InfoGroup';
 import LineChartGroup from 'components/home/LineChartGroup';
 import {NavigationProp, useNavigation, ParamListBase} from '@react-navigation/native';
-import {getDBConnection, getTransactions} from 'db/db-service';
+import {getDBConnection, getProfile, getSaveMoney, getTransactions} from 'db/db-service';
 import moment from 'moment';
 import {calcTotalTrans} from 'utils/utils';
 
 interface Props {}
-
-const wait = (timeout: any) => {
-  return new Promise(resolve => setTimeout(resolve, timeout));
-};
 
 const HomeActivity = (props: Props) => {
   const navigation = useNavigation<NavigationProp<ParamListBase>>();
@@ -30,19 +26,18 @@ const HomeActivity = (props: Props) => {
 
   const [salary, setSalary] = useState(0);
 
-  const [refreshing, setRefreshing] = useState(false);
-
   // FUNCTION
   const loadListTrans = async () => {
     const db = await getDBConnection();
     // get income amount
-    const incomeThisMonth = await getTransactions(db, {
-      startDate: moment(TODAY).startOf('M').toDate(),
-      endDate: moment(TODAY).endOf('M').toDate(),
-      category: 'income',
-    });
-    if (incomeThisMonth.length > 0) {
-      setSalary(incomeThisMonth[0].amount);
+    const profileResult = await getProfile(db);
+    const saveMoneyResult: any = await getSaveMoney(db);
+    let saveMoney = 0;
+    if (saveMoneyResult.length > 0) {
+      saveMoney = saveMoneyResult[0].amount;
+    }
+    if (profileResult.length > 0) {
+      setSalary(profileResult[0].amount - saveMoney);
     }
     const listToday = await getTransactions(db, {
       startDate: moment(TODAY).startOf('d').toDate(),
@@ -71,10 +66,11 @@ const HomeActivity = (props: Props) => {
     setTransToday(combinedList);
     setTransYesterday(listYesterDay);
   };
-
-  const totalUpToday = calcTotalTrans(transToday, 1) + Math.round(salary / 30);
+  // in/out TODAY
+  const totalUpToday = calcTotalTrans(transToday, 1);
   const totalDownToday = calcTotalTrans(transToday, -1);
-  const totalUpYesterday = calcTotalTrans(transYesterday, 1) + Math.round(salary / 30);
+  // in/out YESTERDAY
+  const totalUpYesterday = calcTotalTrans(transYesterday, -1);
   const totalDownYesterday = calcTotalTrans(transYesterday, -1);
 
   const cardDict: any = {
@@ -90,23 +86,17 @@ const HomeActivity = (props: Props) => {
     },
   };
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    wait(2000).then(() => {
-      setRefreshing(false);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
       loadListTrans();
     });
-  }, []);
 
-  useEffect(() => {
-    loadListTrans();
+    return unsubscribe;
   }, []);
 
   return (
     <SafeAreaView>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <Layout style={styles.headerContainer}>
           <Image source={require('assets/images/header.png')} resizeMode="cover" style={styles.imageBG} />
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.cardInfoContainer}>
@@ -144,7 +134,7 @@ const HomeActivity = (props: Props) => {
             <Text style={styles.titleStyle}>Báo cáo tuần</Text>
           </Layout>
           <Layout style={styles.infoGroupContainer}>
-            <LineChartGroup refreshing={refreshing}/>
+            <LineChartGroup />
           </Layout>
         </Layout>
       </ScrollView>

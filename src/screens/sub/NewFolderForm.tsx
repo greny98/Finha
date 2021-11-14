@@ -8,6 +8,7 @@ import {
   Platform,
   ScrollView,
   StyleSheet,
+  TextInput,
   TouchableWithoutFeedback,
 } from 'react-native';
 import TextInputGroup from 'components/common/TextInputGroup';
@@ -22,6 +23,7 @@ import {
 } from 'db/db-service';
 import {Picker} from '@react-native-picker/picker';
 import {getCategoryName} from 'utils/utils';
+import CurrencyInput from 'react-native-currency-input';
 
 const NewFolderForm = () => {
   //Navigation
@@ -40,8 +42,6 @@ const NewFolderForm = () => {
 
   const [moneyAmount, setMoneyAmount] = useState(0);
   const [notes, setNotes] = useState('');
-
-  const {width, height} = Dimensions.get('screen');
 
   const BackIcon = (props: any) => <Icon {...props} name="arrow-back" fill="#FFF" />;
 
@@ -167,20 +167,26 @@ const NewFolderForm = () => {
                 </Picker>
               </Layout>
             </Layout>
-
-            <TextInputGroup
-              style={styles.textInput}
-              layoutProps={{style: styles.textInputLayout}}
-              onChangeText={text => setMoneyAmount(Number(text))}
-              label="Số tiền"
-              keyboardType="numeric"
-            />
-            <TextInputGroup
-              style={styles.textInput}
-              layoutProps={{style: styles.textInputLayout}}
-              onChangeText={text => setNotes(text)}
-              label="Ghi chú"
-            />
+            <Layout style={{width: '90%'}}>
+              <Text category="s2" style={styles.titleStyle}>
+                Số tiền
+              </Text>
+              <CurrencyInput
+                style={styles.inputNumber}
+                value={moneyAmount}
+                onChangeValue={text => setMoneyAmount(Number(text))}
+                separator=","
+                suffix={' VND'}
+                precision={0}
+                minValue={0}
+              />
+            </Layout>
+            <Layout style={{width: '90%'}}>
+              <Text category="s2" style={styles.titleStyle}>
+                Ghi chú
+              </Text>
+              <TextInput style={styles.inputNumber} value={notes} onChangeText={text => setNotes(text)} />
+            </Layout>
             <CustomButton title="Lưu" onPress={createTrans} />
           </Layout>
         </ScrollView>
@@ -204,6 +210,15 @@ const styles = StyleSheet.create({
   },
   pickerStyle: {
     width: '100%',
+  },
+  inputNumber: {
+    borderWidth: 1,
+    width: '100%',
+    borderRadius: 50,
+    borderColor: '#dedede',
+    paddingLeft: 20,
+    marginBottom: 24,
+    height:50
   },
   pickerContainer: {
     width: '100%',

@@ -8,21 +8,18 @@ import {VictoryPie} from 'victory-native';
 import {getDBConnection, getTransactions} from 'db/db-service';
 import moment from 'moment';
 import {getCategoryColor} from 'utils/utils';
+import {useNavigation} from '@react-navigation/core';
 
 interface Props {}
 
-const wait = (timeout: any) => {
-  return new Promise(resolve => setTimeout(resolve, timeout));
-};
-
 const DataAnalysisActivity = (props: Props) => {
+  const navigation = useNavigation();
   const {width, height} = Dimensions.get('screen');
 
   //State
   const [transType, setTransType] = useState(0);
   const [filterTime, setFilterTime] = useState(2);
   const [transList, setTransList] = useState<any>([]);
-  const [refreshing, setRefreshing] = useState(false);
 
   // CREATE Var  Date
   const START_WEEK = moment().startOf('week').toDate();
@@ -72,16 +69,11 @@ const DataAnalysisActivity = (props: Props) => {
     setTransList(combinedList);
   };
 
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    wait(2000).then(() => {
-      setRefreshing(false);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
       loadTransaction(filterTime);
     });
-  }, []);
-
-  useEffect(() => {
-    loadTransaction(filterTime);
+    return unsubscribe;
   }, [filterTime]);
 
   // Logic Data
@@ -114,10 +106,7 @@ const DataAnalysisActivity = (props: Props) => {
 
   return (
     <SafeAreaView>
-      <ScrollView
-        style={{}}
-        showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      <ScrollView style={{}} showsVerticalScrollIndicator={false}>
         <Layout style={styles.btnGroup}>
           <ButtonGroupA title="Thu" active={transType === 0} onPress={() => setTransType(0)} />
           <ButtonGroupA title="Chi" active={transType === 1} onPress={() => setTransType(1)} />
@@ -145,7 +134,7 @@ const DataAnalysisActivity = (props: Props) => {
               style={{
                 position: 'absolute',
                 top: '44%',
-                left: filterTime === 2 ? '35%' : '40%',
+                left: filterTime === 2 ? '36%' : '41%',
                 display: 'flex',
                 alignItems: 'center',
               }}>
@@ -213,10 +202,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   textCirlce1: {
-    fontSize: 20,
+    fontSize: 18,
   },
   textCircle2: {
-    fontSize: 16,
+    fontSize: 14,
     color: '#bebebe',
   },
 });

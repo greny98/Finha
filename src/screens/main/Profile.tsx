@@ -6,19 +6,18 @@ import moment from 'moment';
 import {getDBConnection, getProfile, getSaveMoney, updateSaveMoney} from 'db/db-service';
 import CustomButton from 'components/common/CustomButton';
 import TextInputGroup from 'components/common/TextInputGroup';
+import {useNavigation} from '@react-navigation/core';
+import CurrencyInput from 'react-native-currency-input';
 
 interface Props {}
 
-const wait = (timeout: any) => {
-  return new Promise(resolve => setTimeout(resolve, timeout));
-};
 const Profile = (props: Props) => {
+  const navigation = useNavigation();
   const [saveMoney, setSaveMoney] = useState<any>({});
   const [total, setTotal] = useState(0);
   const [input, setInput] = useState(0);
   const [note, setNote] = useState('');
 
-  const [refreshing, setRefreshing] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
   //Navigation
@@ -26,7 +25,6 @@ const Profile = (props: Props) => {
   const loadIncome = async () => {
     const db = await getDBConnection();
     const result: any = await getSaveMoney(db);
-    console.log('🚀 ~ file: Profile.tsx ~ line 29 ~ loadIncome ~ result', result);
     if (result.length > 0) {
       setSaveMoney(result[0]);
       setInput(result[0].amount);
@@ -52,22 +50,19 @@ const Profile = (props: Props) => {
   };
 
   useEffect(() => {
-    loadIncome();
-  }, []);
-
-  const onRefresh = useCallback(() => {
-    setRefreshing(true);
-    wait(2000).then(() => {
-      setRefreshing(false);
+    const unsubscribe = navigation.addListener('focus', () => {
       loadIncome();
     });
+    return unsubscribe;
   }, []);
 
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{flex: 1}}>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+        contentContainerStyle={{
+          flexGrow: 1,
+        }}>
         <Layout style={styles.root}>
           <Layout style={{alignItems: 'center', width: '100%'}}>
             <Text style={styles.titleStyle}>Thông tin hồ sơ</Text>
@@ -121,11 +116,13 @@ const Profile = (props: Props) => {
             <Layout style={[styles.boxContainer, styles.modalContainer]}>
               <Text style={styles.textStyle}>Mục tiêu tiết kiệm mới là</Text>
               <Layout style={[styles.boxContainer, {flexDirection: 'row'}]}>
-                <Input
-                  keyboardType="numeric"
-                  onChangeText={nextValue => setInput(Number(nextValue))}
+                <CurrencyInput
                   style={styles.inputStyle}
-                  value={input.toString()}
+                  value={input}
+                  onChangeValue={text => setInput(Number(text))}
+                  separator=","
+                  precision={0}
+                  minValue={0}
                 />
                 <Text style={styles.textStyle}>VND</Text>
               </Layout>

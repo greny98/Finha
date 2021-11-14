@@ -142,10 +142,10 @@ android {
     }
     signingConfigs {
         debug {
-            storeFile file('debug.keystore')
-            storePassword 'android'
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
+            storeFile file('finhaa.keystore')
+            storePassword 'quanganh851'
+            keyAlias 'your_key_alias'
+            keyPassword 'quanganh851'
         }
     }
     buildTypes {
