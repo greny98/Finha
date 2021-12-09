@@ -17,6 +17,10 @@ export const getCategoryColor = (categoryId: number) => {
       return '#2A327D';
     case 4:
       return '#FFB039';
+    case 5:
+      return '#2980B9';
+    case 6:
+      return '#c471ed';
     default:
       return '#cecece';
   }
@@ -32,6 +36,10 @@ export const getCategoryName = (category: string) => {
       return 'Vay mượn';
     case 'payment':
       return 'Thanh toán';
+    case 'eating':
+      return 'Ăn uống';
+    case 'debt':
+      return 'Vay nợ';
     default:
       return 'Thu nhập';
   }

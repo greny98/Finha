@@ -57,8 +57,6 @@ const Root = (props: Props) => {
     loadDb();
   }, []);
 
-  useEffect(() => {}, []);
-
   return (
     <Stack.Navigator
       screenOptions={{

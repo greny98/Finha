@@ -257,6 +257,14 @@ export const createCategories = async (db: SQLiteDatabase) => {
       color: '#FFB039',
     },
     {
+      name: 'eating',
+      color: '#2980B9',
+    },
+    {
+      name:'debt',
+      color:'#c471ed'
+    },
+    {
       name: 'income',
       color: '#cecece',
     },
